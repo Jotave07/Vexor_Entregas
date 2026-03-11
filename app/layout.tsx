@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Suspense } from "react";
 import "@/app/globals.css";
 import { NavigationProgressProvider } from "@/components/providers/navigation-progress";
 
@@ -11,7 +12,9 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
   return (
     <html lang="pt-BR">
       <body>
-        <NavigationProgressProvider>{children}</NavigationProgressProvider>
+        <Suspense fallback={null}>
+          <NavigationProgressProvider>{children}</NavigationProgressProvider>
+        </Suspense>
       </body>
     </html>
   );

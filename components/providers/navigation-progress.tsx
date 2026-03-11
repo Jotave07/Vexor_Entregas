@@ -12,7 +12,7 @@ import {
   type AnchorHTMLAttributes,
   type PropsWithChildren
 } from "react";
-import { usePathname, useSearchParams } from "next/navigation";
+import { usePathname } from "next/navigation";
 
 type NavigationProgressContextValue = {
   isNavigating: boolean;
@@ -24,7 +24,6 @@ const NavigationProgressContext = createContext<NavigationProgressContextValue |
 
 export function NavigationProgressProvider({ children }: PropsWithChildren) {
   const pathname = usePathname();
-  const searchParams = useSearchParams();
   const timeoutRef = useRef<number | null>(null);
   const [isNavigating, setIsNavigating] = useState(false);
 
@@ -60,7 +59,7 @@ export function NavigationProgressProvider({ children }: PropsWithChildren) {
 
   useEffect(() => {
     stopNavigation();
-  }, [pathname, searchParams]);
+  }, [pathname]);
 
   const value = useMemo(
     () => ({
