@@ -8,6 +8,8 @@ import { Select } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { formatDate } from "@/lib/utils";
 
+export const dynamic = "force-dynamic";
+
 const allowedStatuses: OrderStatus[] = ["ON_ROUTE", "DELIVERED", "FAILED", "RETURNED"];
 
 export default async function DriverOrderPage({ params }: { params: Promise<{ id: string }> }) {

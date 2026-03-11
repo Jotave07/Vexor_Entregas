@@ -5,6 +5,8 @@ import { requireAuth } from "@/lib/auth";
 import { driverStatusLabels, driverTypeLabels } from "@/lib/status";
 import { StatusBadge } from "@/components/status-badge";
 
+export const dynamic = "force-dynamic";
+
 export default async function DriversPage() {
   const session = await requireAuth();
   const drivers = await prisma.driverProfile.findMany({

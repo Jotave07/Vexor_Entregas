@@ -4,6 +4,8 @@ import { requireAuth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { DriverDeliveryCard } from "@/components/driver-delivery-card";
 
+export const dynamic = "force-dynamic";
+
 export default async function DriverPortalPage() {
   const session = await requireAuth();
 

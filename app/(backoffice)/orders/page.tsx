@@ -3,6 +3,8 @@ import { orderStatusLabels } from "@/lib/status";
 import { currency, formatDate } from "@/lib/utils";
 import { StatusBadge } from "@/components/status-badge";
 
+export const dynamic = "force-dynamic";
+
 export default async function OrdersPage() {
   const orders = await prisma.order.findMany({
     orderBy: { createdAt: "desc" },

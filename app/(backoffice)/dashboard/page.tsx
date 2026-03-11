@@ -3,6 +3,8 @@ import { StatCard } from "@/components/stat-card";
 import { LoadCard } from "@/components/load-card";
 import { currency } from "@/lib/utils";
 
+export const dynamic = "force-dynamic";
+
 export default async function DashboardPage() {
   const [ordersCount, openLoadsCount, activeDriversCount, deliveredCount, recentLoads, pendingOrdersValue] =
     await Promise.all([

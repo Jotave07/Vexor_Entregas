@@ -6,6 +6,8 @@ import { loadStatusLabels, orderStatusLabels } from "@/lib/status";
 import { formatDate } from "@/lib/utils";
 import { StatusBadge } from "@/components/status-badge";
 
+export const dynamic = "force-dynamic";
+
 export default async function LoadsPage() {
   const session = await requireAuth();
   const [loads, drivers, availableOrders] = await Promise.all([
