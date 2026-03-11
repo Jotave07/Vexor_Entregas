@@ -93,7 +93,9 @@ Arquivos preparados para producao:
 
 - `Dockerfile`
 - `.dockerignore`
-- `docker-compose.hostinger.yml`
+- `docker-compose.yml`
+- `docker-compose.image.yml`
+- `.github/workflows/docker-publish.yml`
 
 ### Variaveis de ambiente de producao
 
@@ -111,13 +113,12 @@ PORT="3000"
 ### Fluxo recomendado de deploy
 
 1. Suba este projeto para um repositorio no GitHub.
-2. Na Hostinger, crie um novo projeto/container para o app.
-3. Use o `Dockerfile` deste repositorio para fazer o build.
+2. Aguarde o GitHub Actions publicar a imagem no `ghcr.io`.
+3. Na Hostinger, use o arquivo `docker-compose.image.yml`.
 4. Configure as variaveis de ambiente de producao.
 5. Conecte o container a rede externa `n8n_default`.
-6. Adicione as labels do Traefik ou use o `docker-compose.hostinger.yml`.
-7. Implante o container.
-8. Teste `https://vexortech.cloud`.
+6. Implante o container puxando a imagem pronta.
+7. Teste `https://vexortech.cloud`.
 
 ### Passos para enviar ao GitHub
 
