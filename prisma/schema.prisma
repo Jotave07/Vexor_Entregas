@@ -1,0 +1,223 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum UserRole {
+  ADMIN
+  MANAGER
+  OPERATOR
+  DRIVER
+}
+
+enum DriverType {
+  OWN
+  AGGREGATED
+}
+
+enum DriverStatus {
+  ACTIVE
+  INACTIVE
+}
+
+enum LoadStatus {
+  DRAFT
+  OPEN
+  IN_TRANSIT
+  FINISHED
+  CANCELED
+}
+
+enum OrderStatus {
+  IMPORTED
+  AVAILABLE
+  ASSIGNED
+  ON_ROUTE
+  DELIVERED
+  FAILED
+  RETURNED
+}
+
+enum OccurrenceType {
+  DELAY
+  ABSENT_CLIENT
+  REFUSED
+  ADDRESS_ISSUE
+  DAMAGE
+  OTHER
+}
+
+enum ProofType {
+  RECEIPT
+  PHOTO
+  SIGNATURE
+  OTHER
+}
+
+enum HistorySource {
+  SYSTEM
+  OPERATION
+  DRIVER
+  INTEGRATION
+}
+
+enum IntegrationProvider {
+  WINTHOR
+  N8N
+  PORTAL
+}
+
+enum IntegrationEventType {
+  DRIVER_SYNCED
+  ORDER_SYNCED
+  LOAD_CREATED
+  ORDER_STATUS_CHANGED
+  DELIVERY_OCCURRENCE
+  DELIVERY_PROOF
+}
+
+model User {
+  id            String         @id @default(cuid())
+  name          String
+  email         String         @unique
+  passwordHash  String
+  role          UserRole
+  active        Boolean        @default(true)
+  driverProfile DriverProfile?
+  histories     StatusHistory[]
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+}
+
+model DriverProfile {
+  id           String               @id @default(cuid())
+  userId       String?              @unique
+  user         User?                @relation(fields: [userId], references: [id])
+  integrationRef String?            @unique
+  fullName     String
+  document     String               @unique
+  phone        String?
+  vehicleType  String?
+  vehiclePlate String?
+  type         DriverType
+  status       DriverStatus         @default(ACTIVE)
+  syncedAt     DateTime?
+  loads        Load[]
+  occurrences  DeliveryOccurrence[]
+  proofs       DeliveryProof[]
+  createdAt    DateTime             @default(now())
+  updatedAt    DateTime             @updatedAt
+}
+
+model Load {
+  id               String         @id @default(cuid())
+  code             String         @unique
+  integrationRef   String?        @unique
+  title            String
+  routeDescription String?
+  scheduledDate    DateTime?
+  status           LoadStatus     @default(DRAFT)
+  notes            String?        @db.Text
+  driverId         String?
+  driver           DriverProfile? @relation(fields: [driverId], references: [id])
+  orders           LoadOrder[]
+  createdAt        DateTime       @default(now())
+  updatedAt        DateTime       @updatedAt
+}
+
+model Order {
+  id                String               @id @default(cuid())
+  erpOrderNumber    String               @unique
+  invoiceNumber     String?
+  customerCode      String?
+  customerName      String
+  city              String?
+  state             String?
+  address           String?
+  totalValue        Decimal?             @db.Decimal(10, 2)
+  invoiceDate       DateTime?
+  plannedDeliveryAt DateTime?
+  currentStatus     OrderStatus          @default(IMPORTED)
+  integrationRef    String?
+  metadataJson      Json?
+  loads             LoadOrder[]
+  histories         StatusHistory[]
+  occurrences       DeliveryOccurrence[]
+  proofs            DeliveryProof[]
+  createdAt         DateTime             @default(now())
+  updatedAt         DateTime             @updatedAt
+}
+
+model LoadOrder {
+  id        String   @id @default(cuid())
+  loadId    String
+  orderId   String   @unique
+  sequence  Int      @default(0)
+  load      Load     @relation(fields: [loadId], references: [id], onDelete: Cascade)
+  order     Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+
+  @@index([loadId])
+}
+
+model StatusHistory {
+  id          String        @id @default(cuid())
+  orderId     String
+  fromStatus  OrderStatus?
+  toStatus    OrderStatus
+  source      HistorySource
+  notes       String?       @db.Text
+  latitude    Decimal?      @db.Decimal(10, 7)
+  longitude   Decimal?      @db.Decimal(10, 7)
+  changedById String?
+  changedBy   User?         @relation(fields: [changedById], references: [id])
+  order       Order         @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  createdAt   DateTime      @default(now())
+
+  @@index([orderId, createdAt])
+}
+
+model DeliveryOccurrence {
+  id          String          @id @default(cuid())
+  orderId     String
+  driverId    String?
+  type        OccurrenceType
+  description String          @db.Text
+  resolved    Boolean         @default(false)
+  order       Order           @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  driver      DriverProfile?  @relation(fields: [driverId], references: [id])
+  createdAt   DateTime        @default(now())
+}
+
+model DeliveryProof {
+  id        String          @id @default(cuid())
+  orderId   String
+  driverId  String?
+  type      ProofType
+  fileName  String
+  fileUrl   String
+  mimeType  String?
+  order     Order           @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  driver    DriverProfile?  @relation(fields: [driverId], references: [id])
+  createdAt DateTime        @default(now())
+}
+
+model IntegrationEvent {
+  id            String               @id @default(cuid())
+  provider      IntegrationProvider
+  eventType     IntegrationEventType
+  entityType    String
+  entityId      String
+  correlationId String?
+  payloadJson   Json
+  processedAt   DateTime?
+  failedAt      DateTime?
+  createdAt     DateTime             @default(now())
+
+  @@index([provider, processedAt, createdAt])
+  @@index([entityType, entityId, createdAt])
+}

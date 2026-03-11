@@ -1,0 +1,26 @@
+services:
+  vexor-entregas:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: vexor-entregas
+    restart: unless-stopped
+    environment:
+      NODE_ENV: production
+      PORT: 3000
+      DATABASE_URL: ${DATABASE_URL}
+      JWT_SECRET: ${JWT_SECRET}
+      WINTHOR_SHARED_SECRET: ${WINTHOR_SHARED_SECRET}
+      N8N_SHARED_SECRET: ${N8N_SHARED_SECRET}
+    networks:
+      - n8n_default
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.vexor.rule=Host(`vexortech.cloud`) || Host(`www.vexortech.cloud`)
+      - traefik.http.routers.vexor.entrypoints=web,websecure
+      - traefik.http.routers.vexor.tls=true
+      - traefik.http.services.vexor.loadbalancer.server.port=3000
+
+networks:
+  n8n_default:
+    external: true
