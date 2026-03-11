@@ -20,7 +20,7 @@ function parseApiError(error: unknown) {
     return error;
   }
 
-  return "Nao foi possivel concluir o cadastro.";
+  return "Não foi possível concluir o cadastro.";
 }
 
 export function AdminLoadForm({ drivers, availableOrders }: AdminLoadFormProps) {
@@ -75,11 +75,11 @@ export function AdminLoadForm({ drivers, availableOrders }: AdminLoadFormProps) 
 
       <div className="mt-6 grid gap-4 md:grid-cols-2">
         <label className="space-y-2 text-sm font-medium text-slate-700">
-          Codigo da carga
+          Código da carga
           <Input name="code" required placeholder="Ex.: CG-2026-010" />
         </label>
         <label className="space-y-2 text-sm font-medium text-slate-700">
-          Titulo
+          Título
           <Input name="title" required placeholder="Ex.: Carga interior SP" />
         </label>
         <label className="space-y-2 text-sm font-medium text-slate-700">
@@ -109,17 +109,17 @@ export function AdminLoadForm({ drivers, availableOrders }: AdminLoadFormProps) 
         </label>
         <label className="space-y-2 text-sm font-medium text-slate-700 md:col-span-2">
           Rota
-          <Input name="routeDescription" placeholder="Ex.: Campinas, Sumare e Hortolandia" />
+          <Input name="routeDescription" placeholder="Ex.: Campinas, Sumaré e Hortolândia" />
         </label>
         <label className="space-y-2 text-sm font-medium text-slate-700 md:col-span-2">
-          Observacoes
-          <Textarea name="notes" placeholder="Informacoes importantes da carga." />
+          Observações
+          <Textarea name="notes" placeholder="Informações importantes da carga." />
         </label>
       </div>
 
       <div className="mt-6 rounded-3xl border border-slate-200 bg-slate-50 p-4">
-        <p className="text-sm font-semibold text-slate-950">Pedidos disponiveis</p>
-        <p className="mt-1 text-sm text-slate-500">Selecione os pedidos que ainda nao foram vinculados a outra carga.</p>
+        <p className="text-sm font-semibold text-slate-950">Pedidos disponíveis</p>
+        <p className="mt-1 text-sm text-slate-500">Selecione os pedidos que ainda não foram vinculados a outra carga.</p>
 
         {availableOrders.length > 0 ? (
           <div className="mt-4 grid gap-3 md:grid-cols-2">
@@ -134,7 +134,7 @@ export function AdminLoadForm({ drivers, availableOrders }: AdminLoadFormProps) 
             ))}
           </div>
         ) : (
-          <p className="mt-4 text-sm text-slate-500">Nao ha pedidos livres para vincular neste momento.</p>
+          <p className="mt-4 text-sm text-slate-500">Não há pedidos livres para vincular neste momento.</p>
         )}
       </div>
 

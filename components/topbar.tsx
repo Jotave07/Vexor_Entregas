@@ -5,7 +5,7 @@ export function Topbar() {
   return (
     <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
       <div>
-        <p className="text-sm font-medium text-slate-500">Portal logistico VEXOR</p>
+        <p className="text-sm font-medium text-slate-500">Portal logístico VEXOR</p>
         <h2 className="text-2xl font-semibold text-slate-950">Acompanhamento de cargas e entregas</h2>
       </div>
 

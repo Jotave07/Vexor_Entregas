@@ -5,7 +5,7 @@ import { NavigationProgressProvider } from "@/components/providers/navigation-pr
 
 export const metadata: Metadata = {
   title: "VEXOR Entregas",
-  description: "Portal logistico operacional e mobile para a VEXOR."
+  description: "Portal logístico operacional e mobile para a VEXOR."
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {

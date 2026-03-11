@@ -13,7 +13,7 @@ function parseApiError(error: unknown) {
     return error;
   }
 
-  return "Nao foi possivel concluir o cadastro.";
+  return "Não foi possível concluir o cadastro.";
 }
 
 export function AdminDriverForm() {
@@ -65,7 +65,7 @@ export function AdminDriverForm() {
         <p className="text-sm font-medium text-slate-500">Cadastro administrativo</p>
         <h2 className="text-2xl font-semibold text-slate-950">Novo motorista</h2>
         <p className="text-sm text-slate-500">
-          Use este formulario apenas como contingencia. O fluxo principal considera motoristas sincronizados do Winthor via n8n.
+          Use este formulário apenas como contingência. O fluxo principal considera motoristas sincronizados do Winthor via n8n.
         </p>
       </div>
 
@@ -93,7 +93,7 @@ export function AdminDriverForm() {
           </Select>
         </label>
         <label className="space-y-2 text-sm font-medium text-slate-700">
-          Tipo de veiculo
+          Tipo de veículo
           <Input name="vehicleType" placeholder="Ex.: Carreta, VUC, Fiorino" />
         </label>
         <label className="space-y-2 text-sm font-medium text-slate-700">
@@ -122,7 +122,7 @@ export function AdminDriverForm() {
           </label>
           <label className="space-y-2 text-sm font-medium text-slate-700">
             Senha
-            <Input name="password" type="password" placeholder="Minimo de 6 caracteres" />
+            <Input name="password" type="password" placeholder="Mínimo de 6 caracteres" />
           </label>
         </div>
       </div>

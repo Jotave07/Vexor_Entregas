@@ -23,7 +23,7 @@ export default async function DriversPage() {
         <AdminDriverForm />
       ) : (
         <section className="panel p-6 text-sm text-slate-600">
-          Apenas administradores podem criar cadastros manuais de contingencia. Seu perfil pode consultar abaixo os motoristas sincronizados e ativos na operacao.
+          Apenas administradores podem criar cadastros manuais de contingência. Seu perfil pode consultar abaixo os motoristas sincronizados e ativos na operação.
         </section>
       )}
 
@@ -41,9 +41,9 @@ export default async function DriversPage() {
             <div className="mt-5 grid gap-3 text-sm text-slate-600">
               <p><span className="font-semibold text-slate-900">Documento:</span> {driver.document}</p>
               <p><span className="font-semibold text-slate-900">Telefone:</span> {driver.phone ?? "-"}</p>
-              <p><span className="font-semibold text-slate-900">Veiculo:</span> {driver.vehicleType ?? "-"} / {driver.vehiclePlate ?? "-"}</p>
-              <p><span className="font-semibold text-slate-900">Login:</span> {driver.user?.email ?? "Sem usuario vinculado"}</p>
-              <p><span className="font-semibold text-slate-900">Origem ERP:</span> {driver.integrationRef ?? "Cadastro local/contingencia"}</p>
+              <p><span className="font-semibold text-slate-900">Veículo:</span> {driver.vehicleType ?? "-"} / {driver.vehiclePlate ?? "-"}</p>
+              <p><span className="font-semibold text-slate-900">Login:</span> {driver.user?.email ?? "Sem usuário vinculado"}</p>
+              <p><span className="font-semibold text-slate-900">Origem ERP:</span> {driver.integrationRef ?? "Cadastro local/contingência"}</p>
               <p><span className="font-semibold text-slate-900">Cargas:</span> {driver.loads.length}</p>
             </div>
           </div>

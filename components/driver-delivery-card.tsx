@@ -39,8 +39,8 @@ export function DriverDeliveryCard({
         <StatusBadge label={orderStatusLabels[currentStatus]} tone={tone} />
       </div>
 
-      <p className="mt-4 text-sm text-slate-600">{address ?? "Endereco nao informado"}</p>
-      <p className="mt-2 text-sm text-slate-500">Previsao: {formatDate(plannedDeliveryAt)}</p>
+      <p className="mt-4 text-sm text-slate-600">{address ?? "Endereço não informado"}</p>
+      <p className="mt-2 text-sm text-slate-500">Previsão: {formatDate(plannedDeliveryAt)}</p>
 
       <div className="mt-4 flex gap-3">
         <AppLink

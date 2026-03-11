@@ -19,6 +19,7 @@ services:
       - traefik.http.routers.vexor.rule=Host(`vexortech.cloud`) || Host(`www.vexortech.cloud`)
       - traefik.http.routers.vexor.entrypoints=web,websecure
       - traefik.http.routers.vexor.tls=true
+      - traefik.http.routers.vexor.tls.certresolver=letsencrypt
       - traefik.http.services.vexor.loadbalancer.server.port=3000
 
 networks:

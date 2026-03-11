@@ -63,11 +63,11 @@ export async function POST(request: Request) {
   } catch (error) {
     if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === "P2002") {
       return NextResponse.json(
-        { error: "Ja existe uma carga com este codigo ou um pedido selecionado ja pertence a outra carga." },
+        { error: "Já existe uma carga com este código ou um pedido selecionado já pertence a outra carga." },
         { status: 409 }
       );
     }
 
-    return NextResponse.json({ error: "Nao foi possivel salvar a carga." }, { status: 500 });
+    return NextResponse.json({ error: "Não foi possível salvar a carga." }, { status: 500 });
   }
 }

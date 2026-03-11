@@ -6,7 +6,7 @@ export async function POST(request: Request) {
   const authorized = await requireIntegrationToken("n8n");
 
   if (!authorized) {
-    return NextResponse.json({ error: "Token de integracao invalido." }, { status: 401 });
+    return NextResponse.json({ error: "Token de integração inválido." }, { status: 401 });
   }
 
   const payload = await request.json();

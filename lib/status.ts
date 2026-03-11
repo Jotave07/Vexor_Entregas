@@ -10,7 +10,7 @@ import {
 
 export const orderStatusLabels: Record<OrderStatus, string> = {
   IMPORTED: "Importado",
-  AVAILABLE: "Disponivel",
+  AVAILABLE: "Disponível",
   ASSIGNED: "Vinculado",
   ON_ROUTE: "Em rota",
   DELIVERED: "Entregue",
@@ -21,7 +21,7 @@ export const orderStatusLabels: Record<OrderStatus, string> = {
 export const loadStatusLabels: Record<LoadStatus, string> = {
   DRAFT: "Rascunho",
   OPEN: "Aberta",
-  IN_TRANSIT: "Em transito",
+  IN_TRANSIT: "Em trânsito",
   FINISHED: "Finalizada",
   CANCELED: "Cancelada"
 };
@@ -34,7 +34,7 @@ export const roleLabels: Record<UserRole, string> = {
 };
 
 export const driverTypeLabels: Record<DriverType, string> = {
-  OWN: "Proprio",
+  OWN: "Próprio",
   AGGREGATED: "Agregado"
 };
 
@@ -45,16 +45,16 @@ export const driverStatusLabels: Record<DriverStatus, string> = {
 
 export const historySourceLabels: Record<HistorySource, string> = {
   SYSTEM: "Sistema",
-  OPERATION: "Operacao",
+  OPERATION: "Operação",
   DRIVER: "Motorista",
-  INTEGRATION: "Integracao"
+  INTEGRATION: "Integração"
 };
 
 export const occurrenceTypeLabels: Record<OccurrenceType, string> = {
   DELAY: "Atraso",
   ABSENT_CLIENT: "Cliente ausente",
   REFUSED: "Recusado",
-  ADDRESS_ISSUE: "Endereco incorreto",
+  ADDRESS_ISSUE: "Endereço incorreto",
   DAMAGE: "Avaria",
   OTHER: "Outro"
 };

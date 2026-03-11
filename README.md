@@ -1,6 +1,6 @@
 # VEXOR Entregas
 
-Portal logistico inicial da VEXOR para o dominio `vexortech.cloud`, com foco em operacao interna e uso mobile por motoristas.
+Portal logístico inicial da VEXOR para o domínio `vexortech.cloud`, com foco em operação interna e uso mobile por motoristas.
 
 ## Stack
 
@@ -33,26 +33,26 @@ prisma/
 ## Perfis de acesso
 
 - `ADMIN`: controle total do portal.
-- `MANAGER`: gestao operacional.
+- `MANAGER`: gestão operacional.
 - `OPERATOR`: expedicao e acompanhamento.
-- `DRIVER`: consulta de cargas e atualizacao de entrega.
+- `DRIVER`: consulta de cargas e atualização de entrega.
 
 ## Funcionalidades iniciais entregues
 
-- autenticacao com cookie JWT
+- autenticação com cookie JWT
 - painel operacional
-- sincronizacao/listagem de motoristas
+- sincronização/listagem de motoristas
 - listagem de pedidos faturados
-- gestao visual de cargas
+- gestão visual de cargas
 - portal do motorista com filtro por cadastro
-- atualizacao de status com historico
-- ocorrencias e comprovantes preparados em modelo e API
-- endpoints de integracao preparados para Winthor via n8n
-- fila de eventos para automacoes do n8n
+- atualização de status com histórico
+- ocorrências e comprovantes preparados em modelo e API
+- endpoints de integração preparados para Winthor via n8n
+- fila de eventos para automações do n8n
 
 ## Como subir
 
-1. Instale as dependencias com `npm install`.
+1. Instale as dependências com `npm install`.
 2. Copie `.env.example` para `.env`.
 3. Ajuste `DATABASE_URL` e `JWT_SECRET`.
 4. Configure `WINTHOR_SHARED_SECRET` e `N8N_SHARED_SECRET`.
@@ -72,14 +72,14 @@ N8N_SHARED_SECRET="seu-token-do-n8n"
 ## Fluxo recomendado com n8n e Winthor
 
 - Winthor envia motoristas e pedidos para o portal por fluxos do n8n.
-- O portal nao depende do ERP diretamente: recebe dados sincronizados via endpoints protegidos por token.
+- O portal não depende do ERP diretamente: recebe dados sincronizados via endpoints protegidos por token.
 - O motorista altera status no portal.
 - O portal gera eventos internos para o n8n decidir:
-  - se o contato do cadastro no Winthor e valido
+  - se o contato do cadastro no Winthor é válido
   - se deve devolver status ao ERP
-  - se dispara automacoes de notificacao, auditoria ou excecao
+  - se dispara automações de notificação, auditoria ou exceção
 
-## Endpoints de integracao
+## Endpoints de integração
 
 - `POST /api/integrations/winthor/drivers`
 - `POST /api/integrations/winthor/orders`
@@ -89,7 +89,7 @@ N8N_SHARED_SECRET="seu-token-do-n8n"
 
 ## Deploy na Hostinger
 
-Arquivos preparados para producao:
+Arquivos preparados para produção:
 
 - `Dockerfile`
 - `.dockerignore`
@@ -97,9 +97,9 @@ Arquivos preparados para producao:
 - `docker-compose.image.yml`
 - `.github/workflows/docker-publish.yml`
 
-### Variaveis de ambiente de producao
+### Variáveis de ambiente de produção
 
-Use estas variaveis no container/app da Hostinger:
+Use estas variáveis no container/app da Hostinger:
 
 ```env
 DATABASE_URL="postgresql://VITOR:%23Joaovitor07@srv1479772.hstgr.cloud:32772/VEXOR_ENTREGAS?schema=public"
@@ -115,7 +115,7 @@ PORT="3000"
 1. Suba este projeto para um repositorio no GitHub.
 2. Aguarde o GitHub Actions publicar a imagem no `ghcr.io`.
 3. Na Hostinger, use o arquivo `docker-compose.image.yml`.
-4. Configure as variaveis de ambiente de producao.
+4. Configure as variáveis de ambiente de produção.
 5. Conecte o container a rede externa `n8n_default`.
 6. Implante o container puxando a imagem pronta.
 7. Teste `https://vexortech.cloud`.
@@ -136,11 +136,11 @@ git push -u origin main
 
 Se o Git ainda nao estiver instalado no Windows, instale o Git for Windows antes.
 
-### O que nao enviar ao GitHub
+### O que não enviar ao GitHub
 
 - `.env`
 - credenciais reais
-- tokens de integracao
+- tokens de integração
 
 ## Credenciais iniciais
 

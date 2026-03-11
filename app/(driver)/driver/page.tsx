@@ -34,10 +34,10 @@ export default async function DriverPortalPage() {
     <main className="min-h-screen p-4 md:p-6">
       <div className="mx-auto max-w-5xl space-y-6">
         <section className="panel-dark p-6">
-          <p className="text-sm uppercase tracking-[0.35em] text-brand-100/70">area do motorista</p>
+          <p className="text-sm uppercase tracking-[0.35em] text-brand-100/70">área do motorista</p>
           <h1 className="mt-3 text-3xl font-semibold">Suas cargas abertas</h1>
           <p className="mt-3 max-w-2xl text-sm text-brand-100/80">
-            Visualize apenas os pedidos vinculados ao seu cadastro e atualize status, ocorrencias e comprovantes pelo celular.
+            Visualize apenas os pedidos vinculados ao seu cadastro e atualize status, ocorrências e comprovantes pelo celular.
           </p>
         </section>
 

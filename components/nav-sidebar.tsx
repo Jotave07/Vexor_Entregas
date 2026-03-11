@@ -17,7 +17,7 @@ export function NavSidebar({ session }: { session: SessionUser }) {
   return (
     <aside className="panel-dark flex h-full flex-col gap-8 p-6">
       <div>
-        <p className="text-xs uppercase tracking-[0.4em] text-brand-100/70">Operacao</p>
+        <p className="text-xs uppercase tracking-[0.4em] text-brand-100/70">Operação</p>
         <h2 className="mt-3 text-2xl font-semibold">VEXOR Entregas</h2>
         <p className="mt-2 text-sm text-brand-100/80">{session.name}</p>
         <p className="text-xs text-brand-100/70">{roleLabels[session.role]}</p>

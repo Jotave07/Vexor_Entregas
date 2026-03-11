@@ -46,7 +46,7 @@ export default async function LoadsPage() {
         <AdminLoadForm drivers={drivers} availableOrders={availableOrders} />
       ) : (
         <section className="panel p-6 text-sm text-slate-600">
-          Apenas administradores podem abrir novas cargas. Os pedidos mostrados aqui devem vir do Winthor via n8n e ser apenas vinculados na operacao.
+          Apenas administradores podem abrir novas cargas. Os pedidos mostrados aqui devem vir do Winthor via n8n e ser apenas vinculados na operação.
         </section>
       )}
 
@@ -60,7 +60,7 @@ export default async function LoadsPage() {
               <div>
                 <p className="text-xs font-semibold uppercase tracking-[0.35em] text-slate-400">{load.code}</p>
                 <h2 className="mt-2 text-2xl font-semibold text-slate-950">{load.title}</h2>
-                <p className="mt-2 text-sm text-slate-500">{load.routeDescription ?? "Sem descricao de rota"}</p>
+                <p className="mt-2 text-sm text-slate-500">{load.routeDescription ?? "Sem descrição de rota"}</p>
               </div>
               <StatusBadge label={loadStatusLabels[load.status]} tone={tone} />
             </div>
@@ -68,7 +68,7 @@ export default async function LoadsPage() {
             <div className="mt-6 grid gap-4 md:grid-cols-3">
               <div className="rounded-3xl bg-slate-50 p-4">
                 <p className="text-sm text-slate-500">Motorista</p>
-                <p className="mt-2 font-semibold text-slate-950">{load.driver?.fullName ?? "Nao vinculado"}</p>
+                <p className="mt-2 font-semibold text-slate-950">{load.driver?.fullName ?? "Não vinculado"}</p>
               </div>
               <div className="rounded-3xl bg-slate-50 p-4">
                 <p className="text-sm text-slate-500">Data programada</p>

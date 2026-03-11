@@ -27,13 +27,13 @@ export default async function DashboardPage() {
     <div className="space-y-6">
       <section className="grid gap-4 xl:grid-cols-5">
         <StatCard label="Pedidos faturados" value={String(ordersCount)} hint="Base consolidada do ERP e web." />
-        <StatCard label="Cargas abertas" value={String(openLoadsCount)} hint="Prontas para expedicao ou em rota." />
-        <StatCard label="Motoristas ativos" value={String(activeDriversCount)} hint="Proprios e agregados habilitados." />
+        <StatCard label="Cargas abertas" value={String(openLoadsCount)} hint="Prontas para expedição ou em rota." />
+        <StatCard label="Motoristas ativos" value={String(activeDriversCount)} hint="Próprios e agregados habilitados." />
         <StatCard label="Entregues" value={String(deliveredCount)} hint="Indicador inicial de performance." />
         <StatCard
-          label="Valor em operacao"
+          label="Valor em operação"
           value={currency(pendingOrdersValue._sum.totalValue?.toString())}
-          hint="Pedidos ainda em fluxo logistico."
+          hint="Pedidos ainda em fluxo logístico."
         />
       </section>
 
@@ -45,9 +45,9 @@ export default async function DashboardPage() {
           <div className="mt-6 grid gap-4 md:grid-cols-4">
             {[
               "Winthor envia pedidos faturados",
-              "Operacao monta carga e vincula motorista",
+              "Operação monta carga e vincula motorista",
               "Motorista visualiza cargas abertas",
-              "Status, ocorrencias e comprovantes retornam para o portal"
+              "Status, ocorrências e comprovantes retornam para o portal"
             ].map((step, index) => (
               <div key={step} className="rounded-3xl border border-slate-200 bg-slate-50 p-4">
                 <p className="text-xs font-semibold uppercase tracking-[0.3em] text-brand-600">Etapa {index + 1}</p>
@@ -58,7 +58,7 @@ export default async function DashboardPage() {
         </div>
 
         <div className="panel p-6">
-          <p className="text-sm font-medium text-slate-500">API e integracoes</p>
+          <p className="text-sm font-medium text-slate-500">API e integrações</p>
           <h3 className="mt-1 text-xl font-semibold text-slate-950">Endpoints iniciais</h3>
           <div className="mt-5 space-y-3 text-sm text-slate-600">
             <p><span className="font-semibold text-slate-900">POST</span> /api/integrations/winthor/orders</p>
@@ -73,7 +73,7 @@ export default async function DashboardPage() {
       <section>
         <div className="mb-4">
           <p className="text-sm font-medium text-slate-500">Cargas recentes</p>
-          <h3 className="text-xl font-semibold text-slate-950">Visao rapida da expedicao</h3>
+          <h3 className="text-xl font-semibold text-slate-950">Visão rápida da expedição</h3>
         </div>
 
         <div className="grid gap-4 lg:grid-cols-3">

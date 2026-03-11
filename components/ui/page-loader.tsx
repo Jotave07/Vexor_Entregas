@@ -5,8 +5,8 @@ type PageLoaderProps = {
 };
 
 export function PageLoader({
-  title = "Carregando pagina",
-  message = "Buscando informacoes e preparando a proxima tela.",
+  title = "Carregando página",
+  message = "Buscando informações e preparando a próxima tela.",
   compact = false
 }: PageLoaderProps) {
   return (

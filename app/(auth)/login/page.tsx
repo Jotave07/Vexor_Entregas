@@ -16,7 +16,7 @@ export default function LoginPage() {
             Visibilidade total da operacao, da carga ao comprovante.
           </h2>
           <p className="mt-6 text-lg text-brand-100/80">
-            Base pronta para integrar Winthor, distribuir pedidos, acompanhar entregas e abastecer automacoes via n8n.
+            Plataforma final da VEXOR para integrar Winthor, orquestrar automacoes no n8n e controlar entregas por motorista.
           </p>
         </div>
 

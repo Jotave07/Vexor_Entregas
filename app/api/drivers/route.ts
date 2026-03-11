@@ -73,11 +73,11 @@ export async function POST(request: Request) {
   } catch (error) {
     if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === "P2002") {
       return NextResponse.json(
-        { error: "Ja existe um cadastro com este documento, email ou identificador unico." },
+        { error: "Já existe um cadastro com este documento, email ou identificador único." },
         { status: 409 }
       );
     }
 
-    return NextResponse.json({ error: "Nao foi possivel salvar o motorista." }, { status: 500 });
+    return NextResponse.json({ error: "Não foi possível salvar o motorista." }, { status: 500 });
   }
 }

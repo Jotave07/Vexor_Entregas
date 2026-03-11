@@ -27,10 +27,10 @@ export function LoadCard({ code, title, driverName, scheduledDate, status }: Loa
       <dl className="mt-5 grid gap-3 text-sm text-slate-600">
         <div className="flex justify-between gap-2">
           <dt>Motorista</dt>
-          <dd className="font-medium text-slate-900">{driverName ?? "Nao vinculado"}</dd>
+          <dd className="font-medium text-slate-900">{driverName ?? "Não vinculado"}</dd>
         </div>
         <div className="flex justify-between gap-2">
-          <dt>Programacao</dt>
+          <dt>Programação</dt>
           <dd className="font-medium text-slate-900">{formatDate(scheduledDate)}</dd>
         </div>
       </dl>

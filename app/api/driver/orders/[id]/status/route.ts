@@ -38,7 +38,7 @@ export async function POST(request: Request, { params }: { params: Promise<{ id:
   });
 
   if (!order) {
-    return NextResponse.json({ error: "Pedido nao encontrado para este motorista." }, { status: 404 });
+    return NextResponse.json({ error: "Pedido não encontrado para este motorista." }, { status: 404 });
   }
 
   const updatedOrder = await prisma.order.update({
@@ -79,7 +79,7 @@ export async function POST(request: Request, { params }: { params: Promise<{ id:
         orderId: order.id,
         driverId: session.driverProfileId,
         type: occurrenceType,
-        description: notes || "Ocorrencia registrada pelo motorista."
+        description: notes || "Ocorrência registrada pelo motorista."
       }
     });
 
