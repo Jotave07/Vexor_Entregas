@@ -1,8 +1,9 @@
 "use client";
 
-import Link, { type LinkProps } from "next/link";
+import Link from "next/link";
 import {
   createContext,
+  type ComponentProps,
   useContext,
   useEffect,
   useMemo,
@@ -115,7 +116,7 @@ export function useNavigationProgress() {
   return context;
 }
 
-type AppLinkProps = LinkProps &
+type AppLinkProps = ComponentProps<typeof Link> &
   Omit<AnchorHTMLAttributes<HTMLAnchorElement>, "href"> & {
     immediate?: boolean;
   };
