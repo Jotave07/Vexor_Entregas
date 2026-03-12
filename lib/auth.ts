@@ -28,6 +28,20 @@ function getJwtSecret() {
   return encoder.encode(secret);
 }
 
+export function getSessionCookieName() {
+  return SESSION_COOKIE;
+}
+
+export function getSessionCookieOptions() {
+  return {
+    httpOnly: true,
+    sameSite: "lax" as const,
+    secure: process.env.NODE_ENV === "production",
+    path: "/",
+    maxAge: 60 * 60 * 24 * 7
+  };
+}
+
 export async function authenticate(email: string, password: string) {
   const user = await prisma.user.findUnique({
     where: { email },
@@ -53,22 +67,12 @@ export async function authenticate(email: string, password: string) {
   } satisfies SessionUser;
 }
 
-export async function createSession(user: SessionUser) {
-  const token = await new SignJWT(user)
+export async function createSessionToken(user: SessionUser) {
+  return new SignJWT(user)
     .setProtectedHeader({ alg: "HS256" })
     .setIssuedAt()
     .setExpirationTime("7d")
     .sign(getJwtSecret());
-
-  const store = await cookies();
-
-  store.set(SESSION_COOKIE, token, {
-    httpOnly: true,
-    sameSite: "lax",
-    secure: process.env.NODE_ENV === "production",
-    path: "/",
-    maxAge: 60 * 60 * 24 * 7
-  });
 }
 
 export async function clearSession() {

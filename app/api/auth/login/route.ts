@@ -1,6 +1,11 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
-import { authenticate, createSession } from "@/lib/auth";
+import {
+  authenticate,
+  createSessionToken,
+  getSessionCookieName,
+  getSessionCookieOptions
+} from "@/lib/auth";
 
 const loginSchema = z.object({
   email: z.string().email(),
@@ -22,9 +27,12 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "Email ou senha inválidos." }, { status: 401 });
     }
 
-    await createSession(user);
+    const token = await createSessionToken(user);
+    const response = NextResponse.json({ success: true, role: user.role });
 
-    return NextResponse.json({ success: true, role: user.role });
+    response.cookies.set(getSessionCookieName(), token, getSessionCookieOptions());
+
+    return response;
   } catch (error) {
     console.error("Erro ao autenticar usuário:", error);
     return NextResponse.json({ error: "Não foi possível processar o login." }, { status: 500 });
