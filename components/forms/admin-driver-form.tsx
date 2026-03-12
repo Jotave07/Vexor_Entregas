@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, type FormEvent } from "react";
 import { useRouter } from "next/navigation";
 import { DriverStatus, DriverType } from "@prisma/client";
 import { Button } from "@/components/ui/button";
@@ -22,11 +22,13 @@ export function AdminDriverForm() {
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
 
-  async function handleSubmit(formData: FormData) {
+  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
     setLoading(true);
     setError(null);
     setSuccess(null);
 
+    const formData = new FormData(event.currentTarget);
     const payload = {
       fullName: formData.get("fullName"),
       document: formData.get("document"),
@@ -60,7 +62,7 @@ export function AdminDriverForm() {
   }
 
   return (
-    <form action={handleSubmit} className="panel p-6">
+    <form onSubmit={handleSubmit} className="panel p-6">
       <div className="flex flex-col gap-2">
         <p className="text-sm font-medium text-slate-500">Contingência administrativa</p>
         <h2 className="text-2xl font-semibold text-slate-950">Cadastro manual de motorista</h2>

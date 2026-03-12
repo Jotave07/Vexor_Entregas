@@ -1,7 +1,9 @@
+"use client";
+
 import Link from "next/link";
-import { redirect } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { Package, Truck, Users, LayoutDashboard, Workflow, LogOut } from "lucide-react";
-import { clearSession, type SessionUser } from "@/lib/auth";
+import { type SessionUser } from "@/lib/auth";
 import { roleLabels } from "@/lib/status";
 import { Button } from "@/components/ui/button";
 
@@ -14,6 +16,17 @@ const links = [
 ];
 
 export function NavSidebar({ session }: { session: SessionUser }) {
+  const router = useRouter();
+
+  async function handleLogout() {
+    await fetch("/api/auth/logout", {
+      method: "POST"
+    });
+
+    router.push("/login");
+    router.refresh();
+  }
+
   return (
     <aside className="panel-dark flex h-full flex-col gap-8 p-6">
       <div>
@@ -36,18 +49,10 @@ export function NavSidebar({ session }: { session: SessionUser }) {
         ))}
       </nav>
 
-      <form
-        action={async () => {
-          "use server";
-          await clearSession();
-          redirect("/login");
-        }}
-      >
-        <Button type="submit" variant="ghost" className="w-full justify-start gap-3">
-          <LogOut className="h-4 w-4" />
-          Sair
-        </Button>
-      </form>
+      <Button type="button" variant="ghost" className="w-full justify-start gap-3" onClick={handleLogout}>
+        <LogOut className="h-4 w-4" />
+        Sair
+      </Button>
     </aside>
   );
 }

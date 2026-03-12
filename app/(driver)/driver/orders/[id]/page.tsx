@@ -1,11 +1,9 @@
 import { notFound, redirect } from "next/navigation";
 import { OrderStatus, UserRole } from "@prisma/client";
+import { DriverOrderStatusForm } from "@/components/forms/driver-order-status-form";
 import { requireAuth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
-import { historySourceLabels, occurrenceTypeLabels, orderStatusLabels } from "@/lib/status";
-import { Button } from "@/components/ui/button";
-import { Select } from "@/components/ui/select";
-import { Textarea } from "@/components/ui/textarea";
+import { historySourceLabels, orderStatusLabels } from "@/lib/status";
 import { formatDate } from "@/lib/utils";
 
 export const dynamic = "force-dynamic";
@@ -57,82 +55,34 @@ export default async function DriverOrderPage({ params }: { params: Promise<{ id
     notFound();
   }
 
+  const redirectPath = order.loads[0]?.loadId ? `/driver/loads/${order.loads[0].loadId}` : "/driver";
+
   return (
     <main className="min-h-screen p-4 md:p-6">
       <div className="mx-auto grid max-w-5xl gap-6 lg:grid-cols-[1.15fr_0.85fr]">
         <section className="panel p-6">
           <p className="text-xs font-semibold uppercase tracking-[0.35em] text-slate-400">{order.erpOrderNumber}</p>
           <h1 className="mt-2 text-2xl font-semibold text-slate-950">{order.customerName}</h1>
-          <p className="mt-2 text-sm text-slate-500">{order.address ?? "Endereço não informado"}</p>
-          <p className="mt-2 text-sm text-slate-500">Previsão: {formatDate(order.plannedDeliveryAt)}</p>
-          <p className="mt-2 text-sm text-slate-500">Carga: {order.loads[0]?.load.code ?? "Não identificada"}</p>
-          <p className="mt-2 text-sm text-slate-500">Contato: {order.customerWhatsapp ?? order.customerPhone ?? "Não informado"}</p>
+          <p className="mt-2 text-sm text-slate-500">{order.address ?? "Endereco nao informado"}</p>
+          <p className="mt-2 text-sm text-slate-500">Previsao: {formatDate(order.plannedDeliveryAt)}</p>
+          <p className="mt-2 text-sm text-slate-500">Carga: {order.loads[0]?.load.code ?? "Nao identificada"}</p>
+          <p className="mt-2 text-sm text-slate-500">Contato: {order.customerWhatsapp ?? order.customerPhone ?? "Nao informado"}</p>
 
-          <form action={`/api/driver/orders/${order.id}/status`} method="post" encType="multipart/form-data" className="mt-6 space-y-4">
-            <div>
-              <label className="mb-2 block text-sm font-medium text-slate-700">Novo status</label>
-              <Select name="status" defaultValue="SAIU_PARA_ENTREGA">
-                {allowedStatuses.map((status) => (
-                  <option key={status} value={status}>
-                    {orderStatusLabels[status]}
-                  </option>
-                ))}
-              </Select>
-            </div>
-
-            <div>
-              <label className="mb-2 block text-sm font-medium text-slate-700">Observação operacional</label>
-              <Textarea name="notes" placeholder="Ex.: cliente recebeu sem ressalvas." />
-            </div>
-
-            <div>
-              <label className="mb-2 block text-sm font-medium text-slate-700">Ocorrência opcional</label>
-              <Select name="occurrenceType" defaultValue="">
-                <option value="">Sem ocorrência</option>
-                {Object.entries(occurrenceTypeLabels).map(([value, label]) => (
-                  <option key={value} value={value}>
-                    {label}
-                  </option>
-                ))}
-              </Select>
-            </div>
-
-            <div>
-              <label className="mb-2 block text-sm font-medium text-slate-700">Comprovante</label>
-              <input
-                className="block w-full rounded-lg border border-dashed border-slate-300 bg-slate-50 p-4 text-sm"
-                type="file"
-                name="proof"
-                accept="image/*,.pdf"
-              />
-              <p className="mt-2 text-xs text-slate-500">Envie foto ou PDF. O arquivo será registrado no portal para retorno operacional.</p>
-            </div>
-
-            <div className="grid gap-4 md:grid-cols-2">
-              <div>
-                <label className="mb-2 block text-sm font-medium text-slate-700">Nome do recebedor</label>
-                <input className="block h-11 w-full rounded-lg border border-slate-300 px-4 text-sm" type="text" name="receiverName" />
-              </div>
-              <div>
-                <label className="mb-2 block text-sm font-medium text-slate-700">Documento do recebedor</label>
-                <input className="block h-11 w-full rounded-lg border border-slate-300 px-4 text-sm" type="text" name="receiverDocument" />
-              </div>
-            </div>
-
-            <Button type="submit" className="w-full">
-              Atualizar entrega
-            </Button>
-          </form>
+          <DriverOrderStatusForm
+            orderId={order.id}
+            redirectPath={redirectPath}
+            allowedStatuses={allowedStatuses}
+          />
         </section>
 
         <section className="panel p-6">
-          <p className="text-sm font-medium text-slate-500">Últimas atualizações</p>
+          <p className="text-sm font-medium text-slate-500">Ultimas atualizacoes</p>
           <div className="mt-5 space-y-4">
             {order.histories.map((history) => (
               <div key={history.id} className="panel-edge p-4">
                 <p className="text-sm font-semibold text-slate-950">{orderStatusLabels[history.toStatus]}</p>
                 <p className="mt-1 text-xs uppercase tracking-[0.25em] text-slate-400">{historySourceLabels[history.source]}</p>
-                <p className="mt-2 text-sm text-slate-500">{history.notes ?? "Sem observação"}</p>
+                <p className="mt-2 text-sm text-slate-500">{history.notes ?? "Sem observacao"}</p>
                 <p className="mt-2 text-xs text-slate-400">{formatDate(history.createdAt)}</p>
               </div>
             ))}
