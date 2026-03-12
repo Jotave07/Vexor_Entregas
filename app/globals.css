@@ -26,18 +26,18 @@ textarea {
 }
 
 .panel {
-  @apply rounded-xl border border-slate-200/80 bg-white/90 shadow-card backdrop-blur;
+  @apply rounded-md border border-slate-200/80 bg-white/90 shadow-card backdrop-blur;
 }
 
 .panel-dark {
-  @apply rounded-xl border border-brand-900/70 bg-ink text-white shadow-card;
+  @apply rounded-md border border-brand-900/70 bg-ink text-white shadow-card;
   background-image:
     radial-gradient(circle at top right, rgba(249, 115, 22, 0.18), transparent 20%),
     linear-gradient(180deg, rgba(18, 66, 101, 1), rgba(11, 29, 45, 1));
 }
 
 .panel-edge {
-  @apply rounded-lg border border-slate-200 bg-slate-50/90;
+  @apply rounded-sm border border-slate-200 bg-slate-50/90;
 }
 
 .vexor-spinner {

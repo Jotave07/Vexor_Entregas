@@ -10,32 +10,30 @@ type LoadCardProps = {
   scheduledDate?: Date | null;
   status: keyof typeof loadStatusLabels;
   orderCount?: number;
-  integrationRef?: string | null;
   href?: string;
 };
 
-export function LoadCard({ code, title, driverName, scheduledDate, status, orderCount, integrationRef, href }: LoadCardProps) {
+export function LoadCard({ code, title, driverName, scheduledDate, status, orderCount, href }: LoadCardProps) {
   const tone =
     status === "OPEN" ? "blue" : status === "IN_TRANSIT" ? "amber" : status === "FINISHED" ? "green" : "slate";
 
   const content = (
-    <div className="panel p-5">
+    <div className="panel p-4">
       <div className="flex items-start justify-between gap-4">
         <div>
           <p className="text-xs font-semibold uppercase tracking-[0.3em] text-slate-400">{code}</p>
-          <h3 className="mt-2 text-lg font-semibold text-slate-950">{title}</h3>
-          {integrationRef ? <p className="mt-2 text-xs text-slate-400">Integração: {integrationRef}</p> : null}
+          <h3 className="mt-1 text-base font-semibold text-slate-950">{title}</h3>
         </div>
         <StatusBadge label={loadStatusLabels[status]} tone={tone} />
       </div>
 
-      <dl className="mt-5 grid gap-3 text-sm text-slate-600">
+      <dl className="mt-4 grid gap-2 text-sm text-slate-600">
         <div className="flex justify-between gap-2">
           <dt>Motorista</dt>
-          <dd className="font-medium text-slate-900">{driverName ?? "Não vinculado"}</dd>
+          <dd className="font-medium text-slate-900">{driverName ?? "Nao vinculado"}</dd>
         </div>
         <div className="flex justify-between gap-2">
-          <dt>Programação</dt>
+          <dt>Programacao</dt>
           <dd className="font-medium text-slate-900">{formatDate(scheduledDate)}</dd>
         </div>
         {orderCount !== undefined ? (

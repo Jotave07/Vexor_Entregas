@@ -39,14 +39,14 @@ export default async function DriverLoadDetailPage({ params }: { params: Promise
 
   return (
     <main className="min-h-screen p-4 md:p-6">
-      <div className="mx-auto max-w-5xl space-y-6">
-        <section className="panel p-6">
+      <div className="mx-auto max-w-5xl space-y-4">
+        <section className="panel p-5">
           <div className="flex items-start justify-between gap-4">
             <div>
               <p className="text-xs font-semibold uppercase tracking-[0.35em] text-slate-400">{load.code}</p>
               <h1 className="mt-2 text-2xl font-semibold text-slate-950">{load.title}</h1>
-              <p className="mt-2 text-sm text-slate-500">{load.routeDescription ?? "Sem descrição de rota"}</p>
-              <p className="mt-3 text-sm text-slate-500">Programação: {formatDate(load.scheduledDate)}</p>
+              <p className="mt-2 text-sm text-slate-500">{load.routeDescription ?? "Sem descricao de rota"}</p>
+              <p className="mt-3 text-sm text-slate-500">Programacao: {formatDate(load.scheduledDate)}</p>
             </div>
             <StatusBadge
               label={loadStatusLabels[load.status]}
@@ -61,21 +61,21 @@ export default async function DriverLoadDetailPage({ params }: { params: Promise
           </div>
         </section>
 
-        <section className="space-y-3">
+        <section className="space-y-2">
           {load.orders.map(({ order }, index) => (
             <details key={order.id} className="panel overflow-hidden" open={index === 0}>
-              <summary className="cursor-pointer list-none p-5">
+              <summary className="cursor-pointer list-none p-4">
                 <div className="flex items-start justify-between gap-4">
                   <div>
                     <p className="text-xs font-semibold uppercase tracking-[0.3em] text-slate-400">Parada {index + 1}</p>
-                    <p className="mt-2 text-lg font-semibold text-slate-950">{order.customerName}</p>
+                    <p className="mt-1 text-base font-semibold text-slate-950">{order.customerName}</p>
                     <p className="mt-1 text-sm text-slate-500">{order.erpOrderNumber}</p>
                   </div>
                   <StatusBadge label={orderStatusLabels[order.currentStatus]} tone="slate" />
                 </div>
               </summary>
 
-              <div className="border-t border-slate-200 p-5">
+              <div className="border-t border-slate-200 p-4">
                 <DriverDeliveryCard
                   orderId={order.id}
                   orderNumber={order.erpOrderNumber}

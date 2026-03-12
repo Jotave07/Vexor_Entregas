@@ -26,10 +26,9 @@ export default async function OrdersPage() {
     <section className="panel overflow-hidden">
       <div className="border-b border-slate-200 p-6">
         <p className="text-sm font-medium text-slate-500">Pedidos sincronizados</p>
-        <h2 className="text-2xl font-semibold text-slate-950">Pedidos faturados trazidos do Winthor</h2>
+        <h2 className="text-2xl font-semibold text-slate-950">Pedidos faturados em acompanhamento</h2>
         <p className="mt-2 max-w-3xl text-sm text-slate-500">
-          Esta visão é somente operacional. Os pedidos chegam pelo n8n, já podem vir vinculados a uma carga e servem de base
-          para rastreamento, ocorrências e comprovantes em campo.
+          Visao operacional para acompanhamento de clientes, cargas, ocorrencias e comprovantes em campo.
         </p>
       </div>
 

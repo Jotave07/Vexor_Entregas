@@ -38,25 +38,25 @@ export function LoginForm() {
       const payload: LoginResponse = responseText ? JSON.parse(responseText) : {};
 
       if (!response.ok) {
-        setError(payload.error ?? "Não foi possível entrar.");
+        setError(payload.error ?? "Nao foi possivel entrar.");
         return;
       }
 
       router.push("/dashboard");
       router.refresh();
     } catch {
-      setError("Não foi possível entrar no momento. Tente novamente.");
+      setError("Nao foi possivel entrar no momento. Tente novamente.");
     } finally {
       setLoading(false);
     }
   }
 
   return (
-    <form onSubmit={handleSubmit} className="panel flex w-full max-w-md flex-col gap-5 p-7">
+    <form onSubmit={handleSubmit} className="panel flex w-full max-w-md flex-col gap-5 p-6">
       <div>
         <p className="text-sm font-medium uppercase tracking-[0.3em] text-brand-600">Acesso seguro</p>
         <h2 className="mt-2 text-3xl font-semibold text-slate-950">Entrar no portal</h2>
-        <p className="mt-2 text-sm text-slate-500">Use seu login individual para acessar o fluxo operacional ou a área do motorista.</p>
+        <p className="mt-2 text-sm text-slate-500">Use seu login individual para acessar a operacao.</p>
       </div>
 
       <label className="space-y-2 text-sm font-medium text-slate-700">
@@ -66,7 +66,7 @@ export function LoginForm() {
 
       <label className="space-y-2 text-sm font-medium text-slate-700">
         Senha
-        <Input name="password" type="password" placeholder="••••••••" required />
+        <Input name="password" type="password" placeholder="********" required />
       </label>
 
       {error ? <p className="text-sm text-rose-600">{error}</p> : null}
@@ -75,14 +75,11 @@ export function LoginForm() {
         {loading ? "Entrando..." : "Entrar"}
       </Button>
 
-      <div className="rounded-2xl bg-slate-100 p-4 text-sm text-slate-600">
-        <p className="font-medium text-slate-900">Acessos do portal</p>
-        <p>Administrador: `admin@vexor.com.br`</p>
-        <p>Motorista: `motorista@vexor.com.br`</p>
-        <p className="mt-3 font-medium text-slate-900">Contato</p>
-        <p>CEO: João Vitor Vieira</p>
-        <p>Telefone: `27 99528-8081`</p>
-        <p className="mt-2 text-xs text-slate-500">As senhas e liberações devem ser administradas internamente pela VEXOR.</p>
+      <div className="rounded-md bg-slate-100 p-4 text-sm text-slate-600">
+        <p className="font-medium text-slate-900">Contato</p>
+        <p>CEO: Joao Vitor Vieira</p>
+        <p>Telefone: 27 99528-8081</p>
+        <p className="mt-2 text-xs text-slate-500">As senhas e liberacoes devem ser administradas internamente pela VEXOR.</p>
       </div>
     </form>
   );
