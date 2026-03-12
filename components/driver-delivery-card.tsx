@@ -47,7 +47,7 @@ export function DriverDeliveryCard({
           href={`/driver/orders/${orderId}`}
           className="inline-flex h-11 items-center justify-center rounded-2xl bg-brand-600 px-4 text-sm font-semibold text-white"
         >
-          Atualizar status
+          Atualizar entrega
         </Link>
       </div>
     </div>

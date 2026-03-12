@@ -11,27 +11,26 @@ export default function LoginPage() {
         </div>
 
         <div className="relative max-w-xl">
-          <p className="text-sm font-semibold uppercase tracking-[0.45em] text-brand-100/80">portal logistico</p>
-          <h2 className="mt-6 text-5xl font-semibold leading-tight">
-            Visibilidade total da operacao, da carga ao comprovante.
-          </h2>
+          <p className="text-sm font-semibold uppercase tracking-[0.45em] text-brand-100/80">portal logístico</p>
+          <h2 className="mt-6 text-5xl font-semibold leading-tight">Operação de entrega conectada ao Winthor e ao n8n.</h2>
           <p className="mt-6 text-lg text-brand-100/80">
-            Plataforma final da VEXOR para integrar Winthor, orquestrar automacoes no n8n e controlar entregas por motorista.
+            Plataforma oficial da VEXOR para acompanhar cargas prontas, gerir a rua por motorista e consolidar status,
+            ocorrências e comprovantes com rastreabilidade operacional.
           </p>
         </div>
 
         <div className="relative grid grid-cols-3 gap-4">
           <div className="rounded-3xl border border-white/10 bg-white/10 p-4">
-            <p className="text-sm text-brand-100/70">Pedidos</p>
-            <p className="mt-2 text-2xl font-semibold">ERP + Web</p>
+            <p className="text-sm text-brand-100/70">Origem</p>
+            <p className="mt-2 text-2xl font-semibold">Winthor</p>
           </div>
           <div className="rounded-3xl border border-white/10 bg-white/10 p-4">
-            <p className="text-sm text-brand-100/70">Motoristas</p>
-            <p className="mt-2 text-2xl font-semibold">Proprios + agregados</p>
+            <p className="text-sm text-brand-100/70">Orquestração</p>
+            <p className="mt-2 text-2xl font-semibold">n8n</p>
           </div>
           <div className="rounded-3xl border border-white/10 bg-white/10 p-4">
-            <p className="text-sm text-brand-100/70">Status</p>
-            <p className="mt-2 text-2xl font-semibold">Historico auditavel</p>
+            <p className="text-sm text-brand-100/70">Execução</p>
+            <p className="mt-2 text-2xl font-semibold">Motorista</p>
           </div>
         </div>
       </section>

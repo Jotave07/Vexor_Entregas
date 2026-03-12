@@ -20,7 +20,7 @@ function parseApiError(error: unknown) {
     return error;
   }
 
-  return "Não foi possível concluir o cadastro.";
+  return "Não foi possível concluir o cadastro de contingência.";
 }
 
 export function AdminLoadForm({ drivers, availableOrders }: AdminLoadFormProps) {
@@ -61,16 +61,18 @@ export function AdminLoadForm({ drivers, availableOrders }: AdminLoadFormProps) 
       return;
     }
 
-    setSuccess("Carga cadastrada com sucesso.");
+    setSuccess("Carga de contingência cadastrada com sucesso.");
     router.refresh();
   }
 
   return (
     <form action={handleSubmit} className="panel p-6">
       <div className="flex flex-col gap-2">
-        <p className="text-sm font-medium text-slate-500">Cadastro administrativo</p>
-        <h2 className="text-2xl font-semibold text-slate-950">Nova carga</h2>
-        <p className="text-sm text-slate-500">Somente administradores podem abrir cargas e vincular pedidos.</p>
+        <p className="text-sm font-medium text-slate-500">Contingência administrativa</p>
+        <h2 className="text-2xl font-semibold text-slate-950">Abertura manual de carga</h2>
+        <p className="text-sm text-slate-500">
+          Use este formulário apenas se a carga não chegar do Winthor via n8n e a operação precisar seguir sem interrupção.
+        </p>
       </div>
 
       <div className="mt-6 grid gap-4 md:grid-cols-2">
@@ -113,13 +115,15 @@ export function AdminLoadForm({ drivers, availableOrders }: AdminLoadFormProps) 
         </label>
         <label className="space-y-2 text-sm font-medium text-slate-700 md:col-span-2">
           Observações
-          <Textarea name="notes" placeholder="Informações importantes da carga." />
+          <Textarea name="notes" placeholder="Informações importantes para a expedição e o motorista." />
         </label>
       </div>
 
       <div className="mt-6 rounded-3xl border border-slate-200 bg-slate-50 p-4">
-        <p className="text-sm font-semibold text-slate-950">Pedidos disponíveis</p>
-        <p className="mt-1 text-sm text-slate-500">Selecione os pedidos que ainda não foram vinculados a outra carga.</p>
+        <p className="text-sm font-semibold text-slate-950">Pedidos livres</p>
+        <p className="mt-1 text-sm text-slate-500">
+          Selecione apenas pedidos que ainda não foram vinculados por uma carga importada.
+        </p>
 
         {availableOrders.length > 0 ? (
           <div className="mt-4 grid gap-3 md:grid-cols-2">
@@ -143,7 +147,7 @@ export function AdminLoadForm({ drivers, availableOrders }: AdminLoadFormProps) 
 
       <div className="mt-6">
         <Button type="submit" disabled={loading}>
-          {loading ? "Salvando carga..." : "Cadastrar carga"}
+          {loading ? "Salvando carga..." : "Cadastrar carga de contingência"}
         </Button>
       </div>
     </form>

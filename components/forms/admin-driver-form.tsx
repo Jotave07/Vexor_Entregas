@@ -55,17 +55,17 @@ export function AdminDriverForm() {
       return;
     }
 
-    setSuccess("Motorista cadastrado com sucesso.");
+    setSuccess("Motorista de contingência cadastrado com sucesso.");
     router.refresh();
   }
 
   return (
     <form action={handleSubmit} className="panel p-6">
       <div className="flex flex-col gap-2">
-        <p className="text-sm font-medium text-slate-500">Cadastro administrativo</p>
-        <h2 className="text-2xl font-semibold text-slate-950">Novo motorista</h2>
+        <p className="text-sm font-medium text-slate-500">Contingência administrativa</p>
+        <h2 className="text-2xl font-semibold text-slate-950">Cadastro manual de motorista</h2>
         <p className="text-sm text-slate-500">
-          Use este formulário apenas como contingência. O fluxo principal considera motoristas sincronizados do Winthor via n8n.
+          Use este formulário somente quando o cadastro não puder chegar do Winthor via n8n a tempo de liberar a operação.
         </p>
       </div>
 
@@ -114,7 +114,7 @@ export function AdminDriverForm() {
 
       <div className="mt-6 rounded-3xl border border-slate-200 bg-slate-50 p-4">
         <p className="text-sm font-semibold text-slate-950">Acesso do motorista</p>
-        <p className="mt-1 text-sm text-slate-500">Preencha email e senha apenas se quiser criar o login web agora.</p>
+        <p className="mt-1 text-sm text-slate-500">Preencha e-mail e senha apenas se quiser liberar o acesso web imediatamente.</p>
         <div className="mt-4 grid gap-4 md:grid-cols-2">
           <label className="space-y-2 text-sm font-medium text-slate-700">
             Email
@@ -132,7 +132,7 @@ export function AdminDriverForm() {
 
       <div className="mt-6">
         <Button type="submit" disabled={loading}>
-          {loading ? "Salvando motorista..." : "Cadastrar motorista"}
+          {loading ? "Salvando motorista..." : "Cadastrar motorista de contingência"}
         </Button>
       </div>
     </form>

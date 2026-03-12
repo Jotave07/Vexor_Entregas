@@ -2,7 +2,7 @@ import { redirect } from "next/navigation";
 import { UserRole } from "@prisma/client";
 import { requireAuth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
-import { DriverDeliveryCard } from "@/components/driver-delivery-card";
+import { DriverLoadCard } from "@/components/driver-load-card";
 
 export const dynamic = "force-dynamic";
 
@@ -27,7 +27,7 @@ export default async function DriverPortalPage() {
         }
       }
     },
-    orderBy: { scheduledDate: "asc" }
+    orderBy: [{ scheduledDate: "asc" }, { updatedAt: "desc" }]
   });
 
   return (
@@ -35,35 +35,34 @@ export default async function DriverPortalPage() {
       <div className="mx-auto max-w-5xl space-y-6">
         <section className="panel-dark p-6">
           <p className="text-sm uppercase tracking-[0.35em] text-brand-100/70">área do motorista</p>
-          <h1 className="mt-3 text-3xl font-semibold">Suas cargas abertas</h1>
+          <h1 className="mt-3 text-3xl font-semibold">Minhas cargas em execução</h1>
           <p className="mt-3 max-w-2xl text-sm text-brand-100/80">
-            Visualize apenas os pedidos vinculados ao seu cadastro e atualize status, ocorrências e comprovantes pelo celular.
+            Aqui você acompanha apenas as cargas abertas no seu cadastro, com acesso rápido aos pedidos, ocorrências,
+            comprovantes e confirmação de entrega na rua.
           </p>
         </section>
 
-        {loads.map((load) => (
-          <section key={load.id} className="space-y-4">
-            <div className="panel p-5">
-              <p className="text-xs font-semibold uppercase tracking-[0.35em] text-slate-400">{load.code}</p>
-              <h2 className="mt-2 text-xl font-semibold text-slate-950">{load.title}</h2>
-              <p className="mt-2 text-sm text-slate-500">{load.routeDescription ?? "Sem rota detalhada"}</p>
-            </div>
-
-            <div className="grid gap-4 md:grid-cols-2">
-              {load.orders.map(({ order }) => (
-                <DriverDeliveryCard
-                  key={order.id}
-                  orderId={order.id}
-                  orderNumber={order.erpOrderNumber}
-                  customerName={order.customerName}
-                  address={order.address}
-                  currentStatus={order.currentStatus}
-                  plannedDeliveryAt={order.plannedDeliveryAt}
-                />
-              ))}
-            </div>
+        {loads.length === 0 ? (
+          <section className="panel p-6 text-sm text-slate-600">
+            Nenhuma carga aberta foi vinculada ao seu cadastro no momento.
           </section>
-        ))}
+        ) : (
+          <div className="grid gap-4 md:grid-cols-2">
+            {loads.map((load) => (
+              <DriverLoadCard
+                key={load.id}
+                id={load.id}
+                code={load.code}
+                title={load.title}
+                routeDescription={load.routeDescription}
+                scheduledDate={load.scheduledDate}
+                status={load.status}
+                orderCount={load.orders.length}
+                deliveredCount={load.orders.filter(({ order }) => order.currentStatus === "DELIVERED").length}
+              />
+            ))}
+          </div>
+        )}
       </div>
     </main>
   );

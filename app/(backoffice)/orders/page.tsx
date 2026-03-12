@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { prisma } from "@/lib/prisma";
 import { orderStatusLabels } from "@/lib/status";
 import { currency, formatDate } from "@/lib/utils";
@@ -7,7 +8,7 @@ export const dynamic = "force-dynamic";
 
 export default async function OrdersPage() {
   const orders = await prisma.order.findMany({
-    orderBy: { createdAt: "desc" },
+    orderBy: [{ updatedAt: "desc" }, { erpOrderNumber: "asc" }],
     include: {
       loads: {
         include: {
@@ -24,8 +25,12 @@ export default async function OrdersPage() {
   return (
     <section className="panel overflow-hidden">
       <div className="border-b border-slate-200 p-6">
-        <p className="text-sm font-medium text-slate-500">Pedidos faturados</p>
-        <h2 className="text-2xl font-semibold text-slate-950">Base inicial integrada ao ERP</h2>
+        <p className="text-sm font-medium text-slate-500">Pedidos sincronizados</p>
+        <h2 className="text-2xl font-semibold text-slate-950">Pedidos faturados trazidos do Winthor</h2>
+        <p className="mt-2 max-w-3xl text-sm text-slate-500">
+          Esta visão é somente operacional. Os pedidos chegam pelo n8n, já podem vir vinculados a uma carga e servem de base
+          para rastreamento, ocorrências e comprovantes em campo.
+        </p>
       </div>
 
       <div className="overflow-x-auto">
@@ -62,7 +67,15 @@ export default async function OrdersPage() {
                   <td className="px-6 py-4">
                     <StatusBadge label={orderStatusLabels[order.currentStatus]} tone={tone} />
                   </td>
-                  <td className="px-6 py-4">{assignment?.load.code ?? "Sem carga"}</td>
+                  <td className="px-6 py-4">
+                    {assignment?.load ? (
+                      <Link href={`/loads/${assignment.load.id}`} className="font-medium text-brand-700">
+                        {assignment.load.code}
+                      </Link>
+                    ) : (
+                      "Sem carga"
+                    )}
+                  </td>
                   <td className="px-6 py-4">{assignment?.load.driver?.fullName ?? "Sem motorista"}</td>
                   <td className="px-6 py-4">{currency(order.totalValue?.toString())}</td>
                   <td className="px-6 py-4 text-slate-500">{formatDate(order.updatedAt)}</td>

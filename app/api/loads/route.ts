@@ -68,6 +68,6 @@ export async function POST(request: Request) {
       );
     }
 
-    return NextResponse.json({ error: "Não foi possível salvar a carga." }, { status: 500 });
+    return NextResponse.json({ error: "Não foi possível salvar a carga de contingência." }, { status: 500 });
   }
 }
