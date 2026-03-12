@@ -4,12 +4,17 @@ import { PrismaClient, DriverType, UserRole } from "@prisma/client";
 const prisma = new PrismaClient();
 
 async function main() {
-  const adminPassword = await bcrypt.hash("admin123", 10);
+  const adminPassword = await bcrypt.hash("Vexor@2026", 10);
   const driverPassword = await bcrypt.hash("driver123", 10);
 
   await prisma.user.upsert({
     where: { email: "admin@vexor.com.br" },
-    update: {},
+    update: {
+      name: "Administrador VEXOR",
+      passwordHash: adminPassword,
+      role: UserRole.ADMIN,
+      active: true
+    },
     create: {
       name: "Administrador VEXOR",
       email: "admin@vexor.com.br",
@@ -20,7 +25,12 @@ async function main() {
 
   const driverUser = await prisma.user.upsert({
     where: { email: "motorista@vexor.com.br" },
-    update: {},
+    update: {
+      name: "Carlos Motorista",
+      passwordHash: driverPassword,
+      role: UserRole.DRIVER,
+      active: true
+    },
     create: {
       name: "Carlos Motorista",
       email: "motorista@vexor.com.br",
@@ -31,7 +41,13 @@ async function main() {
 
   await prisma.driverProfile.upsert({
     where: { document: "12345678900" },
-    update: {},
+    update: {
+      fullName: "Carlos Motorista",
+      phone: "(11) 98888-7777",
+      vehicleType: "Truck",
+      vehiclePlate: "ABC1D23",
+      type: DriverType.AGGREGATED
+    },
     create: {
       userId: driverUser.id,
       fullName: "Carlos Motorista",
