@@ -3,7 +3,7 @@ import { notFound, redirect } from "next/navigation";
 import { UserRole } from "@prisma/client";
 import { requireAuth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
-import { loadStatusLabels } from "@/lib/status";
+import { loadStatusLabels, orderStatusLabels } from "@/lib/status";
 import { formatDate } from "@/lib/utils";
 import { StatusBadge } from "@/components/status-badge";
 import { DriverDeliveryCard } from "@/components/driver-delivery-card";
@@ -61,17 +61,31 @@ export default async function DriverLoadDetailPage({ params }: { params: Promise
           </div>
         </section>
 
-        <section className="grid gap-4 md:grid-cols-2">
-          {load.orders.map(({ order }) => (
-            <DriverDeliveryCard
-              key={order.id}
-              orderId={order.id}
-              orderNumber={order.erpOrderNumber}
-              customerName={order.customerName}
-              address={order.address}
-              currentStatus={order.currentStatus}
-              plannedDeliveryAt={order.plannedDeliveryAt}
-            />
+        <section className="space-y-3">
+          {load.orders.map(({ order }, index) => (
+            <details key={order.id} className="panel overflow-hidden" open={index === 0}>
+              <summary className="cursor-pointer list-none p-5">
+                <div className="flex items-start justify-between gap-4">
+                  <div>
+                    <p className="text-xs font-semibold uppercase tracking-[0.3em] text-slate-400">Parada {index + 1}</p>
+                    <p className="mt-2 text-lg font-semibold text-slate-950">{order.customerName}</p>
+                    <p className="mt-1 text-sm text-slate-500">{order.erpOrderNumber}</p>
+                  </div>
+                  <StatusBadge label={orderStatusLabels[order.currentStatus]} tone="slate" />
+                </div>
+              </summary>
+
+              <div className="border-t border-slate-200 p-5">
+                <DriverDeliveryCard
+                  orderId={order.id}
+                  orderNumber={order.erpOrderNumber}
+                  customerName={order.customerName}
+                  address={order.address}
+                  currentStatus={order.currentStatus}
+                  plannedDeliveryAt={order.plannedDeliveryAt}
+                />
+              </div>
+            </details>
           ))}
         </section>
       </div>

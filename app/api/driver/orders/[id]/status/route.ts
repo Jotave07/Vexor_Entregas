@@ -1,3 +1,6 @@
+import { mkdir, writeFile } from "node:fs/promises";
+import path from "node:path";
+import { randomUUID } from "node:crypto";
 import { NextResponse } from "next/server";
 import { IntegrationEventType, IntegrationProvider, OccurrenceType, OrderStatus, ProofType, UserRole } from "@prisma/client";
 import { requireAuth } from "@/lib/auth";
@@ -21,7 +24,7 @@ export async function POST(request: Request, { params }: { params: Promise<{ id:
   const proof = formData.get("proof");
 
   if (!status || !driverAllowedStatuses.includes(status)) {
-    return NextResponse.json({ error: "Status invalido." }, { status: 400 });
+    return NextResponse.json({ error: "Status inválido." }, { status: 400 });
   }
 
   const order = await prisma.order.findFirst({
@@ -34,6 +37,9 @@ export async function POST(request: Request, { params }: { params: Promise<{ id:
           }
         }
       }
+    },
+    include: {
+      loads: true
     }
   });
 
@@ -100,13 +106,21 @@ export async function POST(request: Request, { params }: { params: Promise<{ id:
   }
 
   if (proof && proof instanceof File && proof.size > 0) {
+    const bytes = Buffer.from(await proof.arrayBuffer());
+    const extension = path.extname(proof.name) || (proof.type === "application/pdf" ? ".pdf" : ".jpg");
+    const safeFileName = `${Date.now()}-${randomUUID()}${extension}`;
+    const uploadDirectory = path.join(process.cwd(), "public", "uploads", "proofs");
+
+    await mkdir(uploadDirectory, { recursive: true });
+    await writeFile(path.join(uploadDirectory, safeFileName), bytes);
+
     const createdProof = await prisma.deliveryProof.create({
       data: {
         orderId: order.id,
         driverId: session.driverProfileId,
-        type: ProofType.PHOTO,
+        type: proof.type === "application/pdf" ? ProofType.RECEIPT : ProofType.PHOTO,
         fileName: proof.name,
-        fileUrl: `/uploads/${proof.name}`,
+        fileUrl: `/uploads/proofs/${safeFileName}`,
         mimeType: proof.type
       }
     });
@@ -127,5 +141,6 @@ export async function POST(request: Request, { params }: { params: Promise<{ id:
     });
   }
 
-  return NextResponse.redirect(new URL("/driver", request.url));
+  const redirectLoadId = order.loads[0]?.loadId;
+  return NextResponse.redirect(new URL(redirectLoadId ? `/driver/loads/${redirectLoadId}` : "/driver", request.url));
 }
