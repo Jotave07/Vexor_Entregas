@@ -159,5 +159,14 @@ export async function POST(request: Request, { params }: { params: Promise<{ id:
   }
 
   const redirectLoadId = order.loads[0]?.loadId;
-  return NextResponse.redirect(new URL(redirectLoadId ? `/driver/loads/${redirectLoadId}` : "/driver", request.url));
+  const redirectPath = redirectLoadId ? `/driver/loads/${redirectLoadId}` : "/driver";
+  const forwardedHost = request.headers.get("x-forwarded-host");
+  const forwardedProto = request.headers.get("x-forwarded-proto") ?? "https";
+  const host = forwardedHost ?? request.headers.get("host");
+
+  if (host) {
+    return NextResponse.redirect(new URL(redirectPath, `${forwardedProto}://${host}`));
+  }
+
+  return NextResponse.redirect(new URL(redirectPath, request.url));
 }
