@@ -9,13 +9,16 @@ import {
 } from "@prisma/client";
 
 export const orderStatusLabels: Record<OrderStatus, string> = {
-  IMPORTED: "Importado",
-  AVAILABLE: "Disponível",
-  ASSIGNED: "Vinculado",
-  ON_ROUTE: "Em rota",
-  DELIVERED: "Entregue",
-  FAILED: "Falha",
-  RETURNED: "Devolvido"
+  FATURADO: "Faturado",
+  AGUARDANDO_CARREGAMENTO: "Aguardando carregamento",
+  CARREGADO: "Carregado",
+  SAIU_PARA_ENTREGA: "Saiu para entrega",
+  ENTREGUE: "Entregue",
+  ENTREGA_PARCIAL: "Entrega parcial",
+  CLIENTE_AUSENTE: "Cliente ausente",
+  RECUSADO: "Recusado",
+  DEVOLUCAO: "Devolução",
+  OCORRENCIA: "Ocorrência"
 };
 
 export const loadStatusLabels: Record<LoadStatus, string> = {

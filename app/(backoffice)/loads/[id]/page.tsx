@@ -43,7 +43,7 @@ export default async function LoadDetailPage({ params }: { params: Promise<{ id:
     notFound();
   }
 
-  const deliveredCount = load.orders.filter(({ order }) => order.currentStatus === "DELIVERED").length;
+  const deliveredCount = load.orders.filter(({ order }) => order.currentStatus === "ENTREGUE").length;
 
   return (
     <div className="space-y-6">
@@ -66,7 +66,7 @@ export default async function LoadDetailPage({ params }: { params: Promise<{ id:
         <div className="mt-6 grid gap-4 md:grid-cols-4">
           <div className="rounded-3xl bg-slate-50 p-4">
             <p className="text-sm text-slate-500">Motorista</p>
-            <p className="mt-2 font-semibold text-slate-950">{load.driver?.fullName ?? "Não vinculado"}</p>
+            <p className="mt-2 font-semibold text-slate-950">{load.driverNameSnapshot ?? load.driver?.fullName ?? "Não vinculado"}</p>
           </div>
           <div className="rounded-3xl bg-slate-50 p-4">
             <p className="text-sm text-slate-500">Programação</p>
@@ -80,17 +80,33 @@ export default async function LoadDetailPage({ params }: { params: Promise<{ id:
             <p className="text-sm text-slate-500">Entregues</p>
             <p className="mt-2 font-semibold text-slate-950">{deliveredCount}</p>
           </div>
+          <div className="rounded-3xl bg-slate-50 p-4">
+            <p className="text-sm text-slate-500">Placa do dia</p>
+            <p className="mt-2 font-semibold text-slate-950">{load.vehiclePlate ?? "-"}</p>
+          </div>
+          <div className="rounded-3xl bg-slate-50 p-4">
+            <p className="text-sm text-slate-500">Filial de origem</p>
+            <p className="mt-2 font-semibold text-slate-950">{load.originBranch ?? "-"}</p>
+          </div>
+          <div className="rounded-3xl bg-slate-50 p-4">
+            <p className="text-sm text-slate-500">Conferente</p>
+            <p className="mt-2 font-semibold text-slate-950">{load.dispatcherName ?? "-"}</p>
+          </div>
+          <div className="rounded-3xl bg-slate-50 p-4">
+            <p className="text-sm text-slate-500">Saída real</p>
+            <p className="mt-2 font-semibold text-slate-950">{formatDate(load.departedAt)}</p>
+          </div>
         </div>
       </section>
 
       <section className="space-y-4">
         {load.orders.map(({ id: assignmentId, sequence, order }) => {
           const tone =
-            order.currentStatus === "DELIVERED"
+            order.currentStatus === "ENTREGUE"
               ? "green"
-              : order.currentStatus === "FAILED"
+              : order.currentStatus === "RECUSADO" || order.currentStatus === "DEVOLUCAO" || order.currentStatus === "OCORRENCIA"
                 ? "rose"
-                : order.currentStatus === "ON_ROUTE"
+                : order.currentStatus === "SAIU_PARA_ENTREGA"
                   ? "amber"
                   : "blue";
 
@@ -123,6 +139,14 @@ export default async function LoadDetailPage({ params }: { params: Promise<{ id:
                 <div className="rounded-3xl bg-slate-50 p-4">
                   <p className="text-sm text-slate-500">Comprovantes</p>
                   <p className="mt-2 font-semibold text-slate-950">{order.proofs.length}</p>
+                </div>
+                <div className="rounded-3xl bg-slate-50 p-4">
+                  <p className="text-sm text-slate-500">Contato do cliente</p>
+                  <p className="mt-2 font-semibold text-slate-950">{order.customerWhatsapp ?? order.customerPhone ?? "-"}</p>
+                </div>
+                <div className="rounded-3xl bg-slate-50 p-4">
+                  <p className="text-sm text-slate-500">Recebedor previsto</p>
+                  <p className="mt-2 font-semibold text-slate-950">{order.recipientName ?? "-"}</p>
                 </div>
               </div>
 

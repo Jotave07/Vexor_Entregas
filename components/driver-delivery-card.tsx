@@ -21,11 +21,11 @@ export function DriverDeliveryCard({
   plannedDeliveryAt
 }: DriverDeliveryCardProps) {
   const tone =
-    currentStatus === "DELIVERED"
+    currentStatus === "ENTREGUE"
       ? "green"
-      : currentStatus === "ON_ROUTE"
+      : currentStatus === "SAIU_PARA_ENTREGA"
         ? "amber"
-        : currentStatus === "FAILED"
+        : currentStatus === "RECUSADO" || currentStatus === "DEVOLUCAO" || currentStatus === "OCORRENCIA"
           ? "rose"
           : "blue";
 

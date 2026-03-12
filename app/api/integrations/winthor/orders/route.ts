@@ -6,15 +6,28 @@ import { prisma } from "@/lib/prisma";
 
 const importedOrderSchema = z.object({
   erpOrderNumber: z.string(),
+  integrationRef: z.string().optional(),
   invoiceNumber: z.string().optional(),
   customerCode: z.string().optional(),
   customerName: z.string(),
+  customerPhone: z.string().optional(),
+  customerWhatsapp: z.string().optional(),
+  allowWhatsapp: z.boolean().optional(),
+  allowSms: z.boolean().optional(),
+  recipientName: z.string().optional(),
+  recipientDocument: z.string().optional(),
   city: z.string().optional(),
   state: z.string().optional(),
   address: z.string().optional(),
   totalValue: z.number().optional(),
   invoiceDate: z.string().optional(),
   plannedDeliveryAt: z.string().optional(),
+  isBilled: z.boolean().optional(),
+  isOpen: z.boolean().optional(),
+  winthorStatus: z.string().optional(),
+  assignedDriverDocument: z.string().optional(),
+  assignedDriverName: z.string().optional(),
+  assignedAt: z.string().optional(),
   metadataJson: z.record(z.any()).optional()
 });
 
@@ -36,25 +49,97 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: result.error.flatten() }, { status: 400 });
   }
 
-  const operations = result.data.orders.map((order) =>
-    prisma.order.upsert({
-      where: { erpOrderNumber: order.erpOrderNumber },
-      update: {
-        ...order,
-        invoiceDate: order.invoiceDate ? new Date(order.invoiceDate) : undefined,
-        plannedDeliveryAt: order.plannedDeliveryAt ? new Date(order.plannedDeliveryAt) : undefined,
-        currentStatus: OrderStatus.IMPORTED
-      },
-      create: {
-        ...order,
-        invoiceDate: order.invoiceDate ? new Date(order.invoiceDate) : undefined,
-        plannedDeliveryAt: order.plannedDeliveryAt ? new Date(order.plannedDeliveryAt) : undefined,
-        currentStatus: OrderStatus.IMPORTED
-      }
-    })
-  );
+  const imported = await prisma.$transaction(async (tx) => {
+    const orders = [];
 
-  const imported = await prisma.$transaction(operations);
+    for (const order of result.data.orders) {
+      const customer = order.customerCode || order.customerName
+        ? await tx.customer.upsert({
+            where: {
+              customerCode: order.customerCode ?? `cliente-${order.erpOrderNumber}`
+            },
+            update: {
+              name: order.customerName,
+              phone: order.customerPhone,
+              whatsapp: order.customerWhatsapp,
+              allowWhatsapp: order.allowWhatsapp ?? false,
+              allowSms: order.allowSms ?? false
+            },
+            create: {
+              customerCode: order.customerCode ?? `cliente-${order.erpOrderNumber}`,
+              name: order.customerName,
+              phone: order.customerPhone,
+              whatsapp: order.customerWhatsapp,
+              allowWhatsapp: order.allowWhatsapp ?? false,
+              allowSms: order.allowSms ?? false
+            }
+          })
+        : null;
+
+      const savedOrder = await tx.order.upsert({
+        where: { erpOrderNumber: order.erpOrderNumber },
+        update: {
+          integrationRef: order.integrationRef,
+          invoiceNumber: order.invoiceNumber,
+          customerId: customer?.id,
+          customerCode: order.customerCode,
+          customerName: order.customerName,
+          customerPhone: order.customerPhone,
+          customerWhatsapp: order.customerWhatsapp,
+          allowWhatsapp: order.allowWhatsapp ?? false,
+          allowSms: order.allowSms ?? false,
+          recipientName: order.recipientName,
+          recipientDocument: order.recipientDocument,
+          city: order.city,
+          state: order.state,
+          address: order.address,
+          totalValue: order.totalValue,
+          invoiceDate: order.invoiceDate ? new Date(order.invoiceDate) : undefined,
+          plannedDeliveryAt: order.plannedDeliveryAt ? new Date(order.plannedDeliveryAt) : undefined,
+          currentStatus: OrderStatus.FATURADO,
+          isBilled: order.isBilled ?? true,
+          isOpen: order.isOpen ?? true,
+          winthorStatus: order.winthorStatus,
+          assignedDriverDocument: order.assignedDriverDocument,
+          assignedDriverName: order.assignedDriverName,
+          assignedAt: order.assignedAt ? new Date(order.assignedAt) : undefined,
+          metadataJson: order.metadataJson
+        },
+        create: {
+          erpOrderNumber: order.erpOrderNumber,
+          integrationRef: order.integrationRef,
+          invoiceNumber: order.invoiceNumber,
+          customerId: customer?.id,
+          customerCode: order.customerCode,
+          customerName: order.customerName,
+          customerPhone: order.customerPhone,
+          customerWhatsapp: order.customerWhatsapp,
+          allowWhatsapp: order.allowWhatsapp ?? false,
+          allowSms: order.allowSms ?? false,
+          recipientName: order.recipientName,
+          recipientDocument: order.recipientDocument,
+          city: order.city,
+          state: order.state,
+          address: order.address,
+          totalValue: order.totalValue,
+          invoiceDate: order.invoiceDate ? new Date(order.invoiceDate) : undefined,
+          plannedDeliveryAt: order.plannedDeliveryAt ? new Date(order.plannedDeliveryAt) : undefined,
+          currentStatus: OrderStatus.FATURADO,
+          isBilled: order.isBilled ?? true,
+          isOpen: order.isOpen ?? true,
+          winthorStatus: order.winthorStatus,
+          assignedDriverDocument: order.assignedDriverDocument,
+          assignedDriverName: order.assignedDriverName,
+          assignedAt: order.assignedAt ? new Date(order.assignedAt) : undefined,
+          metadataJson: order.metadataJson
+        }
+      });
+
+      orders.push(savedOrder);
+    }
+
+    return orders;
+  });
 
   await Promise.all(
     imported.map((order) =>

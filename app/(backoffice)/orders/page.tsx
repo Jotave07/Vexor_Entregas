@@ -39,6 +39,7 @@ export default async function OrdersPage() {
             <tr>
               <th className="px-6 py-4">Pedido ERP</th>
               <th className="px-6 py-4">Cliente</th>
+              <th className="px-6 py-4">Contato</th>
               <th className="px-6 py-4">NF</th>
               <th className="px-6 py-4">Status</th>
               <th className="px-6 py-4">Carga</th>
@@ -51,11 +52,11 @@ export default async function OrdersPage() {
             {orders.map((order) => {
               const assignment = order.loads[0];
               const tone =
-                order.currentStatus === "DELIVERED"
+                order.currentStatus === "ENTREGUE"
                   ? "green"
-                  : order.currentStatus === "FAILED"
+                  : order.currentStatus === "RECUSADO" || order.currentStatus === "DEVOLUCAO" || order.currentStatus === "OCORRENCIA"
                     ? "rose"
-                    : order.currentStatus === "ON_ROUTE"
+                    : order.currentStatus === "SAIU_PARA_ENTREGA"
                       ? "amber"
                       : "blue";
 
@@ -63,6 +64,7 @@ export default async function OrdersPage() {
                 <tr key={order.id} className="border-t border-slate-100 text-sm">
                   <td className="px-6 py-4 font-semibold text-slate-950">{order.erpOrderNumber}</td>
                   <td className="px-6 py-4">{order.customerName}</td>
+                  <td className="px-6 py-4">{order.customerWhatsapp ?? order.customerPhone ?? "-"}</td>
                   <td className="px-6 py-4">{order.invoiceNumber ?? "-"}</td>
                   <td className="px-6 py-4">
                     <StatusBadge label={orderStatusLabels[order.currentStatus]} tone={tone} />

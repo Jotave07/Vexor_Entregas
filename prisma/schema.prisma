@@ -33,13 +33,16 @@ enum LoadStatus {
 }
 
 enum OrderStatus {
-  IMPORTED
-  AVAILABLE
-  ASSIGNED
-  ON_ROUTE
-  DELIVERED
-  FAILED
-  RETURNED
+  FATURADO
+  AGUARDANDO_CARREGAMENTO
+  CARREGADO
+  SAIU_PARA_ENTREGA
+  ENTREGUE
+  ENTREGA_PARCIAL
+  CLIENTE_AUSENTE
+  RECUSADO
+  DEVOLUCAO
+  OCORRENCIA
 }
 
 enum OccurrenceType {
@@ -93,63 +96,99 @@ model User {
   updatedAt     DateTime       @updatedAt
 }
 
+model Customer {
+  id             String    @id @default(cuid())
+  customerCode   String?   @unique
+  name           String
+  phone          String?
+  whatsapp       String?
+  allowWhatsapp  Boolean   @default(false)
+  allowSms       Boolean   @default(false)
+  orders         Order[]
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+}
+
 model DriverProfile {
-  id           String               @id @default(cuid())
-  userId       String?              @unique
-  user         User?                @relation(fields: [userId], references: [id])
-  integrationRef String?            @unique
-  fullName     String
-  document     String               @unique
-  phone        String?
-  vehicleType  String?
-  vehiclePlate String?
-  type         DriverType
-  status       DriverStatus         @default(ACTIVE)
-  syncedAt     DateTime?
-  loads        Load[]
-  occurrences  DeliveryOccurrence[]
-  proofs       DeliveryProof[]
-  createdAt    DateTime             @default(now())
-  updatedAt    DateTime             @updatedAt
+  id              String               @id @default(cuid())
+  userId          String?              @unique
+  user            User?                @relation(fields: [userId], references: [id])
+  integrationRef  String?              @unique
+  fullName        String
+  document        String               @unique
+  phone           String?
+  vehicleType     String?
+  vehiclePlate    String?
+  type            DriverType
+  status          DriverStatus         @default(ACTIVE)
+  syncedAt        DateTime?
+  loads           Load[]
+  occurrences     DeliveryOccurrence[]
+  proofs          DeliveryProof[]
+  createdAt       DateTime             @default(now())
+  updatedAt       DateTime             @updatedAt
 }
 
 model Load {
-  id               String         @id @default(cuid())
-  code             String         @unique
-  integrationRef   String?        @unique
-  title            String
-  routeDescription String?
-  scheduledDate    DateTime?
-  status           LoadStatus     @default(DRAFT)
-  notes            String?        @db.Text
-  driverId         String?
-  driver           DriverProfile? @relation(fields: [driverId], references: [id])
-  orders           LoadOrder[]
-  createdAt        DateTime       @default(now())
-  updatedAt        DateTime       @updatedAt
+  id                    String         @id @default(cuid())
+  code                  String         @unique
+  integrationRef        String?        @unique
+  title                 String
+  routeDescription      String?
+  scheduledDate         DateTime?
+  status                LoadStatus     @default(DRAFT)
+  notes                 String?        @db.Text
+  driverId              String?
+  vehiclePlate          String?
+  driverDocumentSnapshot String?
+  driverNameSnapshot    String?
+  carrierType           DriverType?
+  loadedAt              DateTime?
+  departedAt            DateTime?
+  closedAt              DateTime?
+  originBranch          String?
+  dispatcherName        String?
+  driver                DriverProfile? @relation(fields: [driverId], references: [id])
+  orders                LoadOrder[]
+  createdAt             DateTime       @default(now())
+  updatedAt             DateTime       @updatedAt
 }
 
 model Order {
-  id                String               @id @default(cuid())
-  erpOrderNumber    String               @unique
-  invoiceNumber     String?
-  customerCode      String?
-  customerName      String
-  city              String?
-  state             String?
-  address           String?
-  totalValue        Decimal?             @db.Decimal(10, 2)
-  invoiceDate       DateTime?
-  plannedDeliveryAt DateTime?
-  currentStatus     OrderStatus          @default(IMPORTED)
-  integrationRef    String?
-  metadataJson      Json?
-  loads             LoadOrder[]
-  histories         StatusHistory[]
-  occurrences       DeliveryOccurrence[]
-  proofs            DeliveryProof[]
-  createdAt         DateTime             @default(now())
-  updatedAt         DateTime             @updatedAt
+  id                   String               @id @default(cuid())
+  customerId           String?
+  erpOrderNumber       String               @unique
+  invoiceNumber        String?
+  customerCode         String?
+  customerName         String
+  customerPhone        String?
+  customerWhatsapp     String?
+  allowWhatsapp        Boolean              @default(false)
+  allowSms             Boolean              @default(false)
+  recipientName        String?
+  recipientDocument    String?
+  city                 String?
+  state                String?
+  address              String?
+  totalValue           Decimal?             @db.Decimal(10, 2)
+  invoiceDate          DateTime?
+  plannedDeliveryAt    DateTime?
+  currentStatus        OrderStatus          @default(FATURADO)
+  isBilled             Boolean              @default(true)
+  isOpen               Boolean              @default(true)
+  winthorStatus        String?
+  assignedDriverDocument String?
+  assignedDriverName   String?
+  assignedAt           DateTime?
+  integrationRef       String?
+  metadataJson         Json?
+  customer             Customer?            @relation(fields: [customerId], references: [id])
+  loads                LoadOrder[]
+  histories            StatusHistory[]
+  occurrences          DeliveryOccurrence[]
+  proofs               DeliveryProof[]
+  createdAt            DateTime             @default(now())
+  updatedAt            DateTime             @updatedAt
 }
 
 model LoadOrder {
@@ -194,16 +233,22 @@ model DeliveryOccurrence {
 }
 
 model DeliveryProof {
-  id        String          @id @default(cuid())
-  orderId   String
-  driverId  String?
-  type      ProofType
-  fileName  String
-  fileUrl   String
-  mimeType  String?
-  order     Order           @relation(fields: [orderId], references: [id], onDelete: Cascade)
-  driver    DriverProfile?  @relation(fields: [driverId], references: [id])
-  createdAt DateTime        @default(now())
+  id               String          @id @default(cuid())
+  orderId          String
+  driverId         String?
+  type             ProofType
+  fileName         String
+  fileUrl          String
+  mimeType         String?
+  receiverName     String?
+  receiverDocument String?
+  deliveredAt      DateTime?
+  latitude         Decimal?        @db.Decimal(10, 7)
+  longitude        Decimal?        @db.Decimal(10, 7)
+  notes            String?         @db.Text
+  order            Order           @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  driver           DriverProfile?  @relation(fields: [driverId], references: [id])
+  createdAt        DateTime        @default(now())
 }
 
 model IntegrationEvent {

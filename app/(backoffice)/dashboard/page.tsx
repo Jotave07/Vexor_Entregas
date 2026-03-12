@@ -12,7 +12,7 @@ export default async function DashboardPage() {
       prisma.order.count(),
       prisma.load.count({ where: { status: { in: ["OPEN", "IN_TRANSIT"] } } }),
       prisma.driverProfile.count({ where: { status: "ACTIVE" } }),
-      prisma.order.count({ where: { currentStatus: "ON_ROUTE" } }),
+      prisma.order.count({ where: { currentStatus: "SAIU_PARA_ENTREGA" } }),
       prisma.load.findMany({
         take: 4,
         orderBy: { updatedAt: "desc" },
@@ -23,7 +23,11 @@ export default async function DashboardPage() {
       }),
       prisma.order.aggregate({
         _sum: { totalValue: true },
-        where: { currentStatus: { in: ["IMPORTED", "AVAILABLE", "ASSIGNED", "ON_ROUTE"] } }
+        where: {
+          currentStatus: {
+            in: ["FATURADO", "AGUARDANDO_CARREGAMENTO", "CARREGADO", "SAIU_PARA_ENTREGA", "OCORRENCIA"]
+          }
+        }
       }),
       prisma.load.count({
         where: {
@@ -37,10 +41,10 @@ export default async function DashboardPage() {
   return (
     <div className="space-y-6">
       <section className="grid gap-4 xl:grid-cols-5">
-        <StatCard label="Pedidos importados" value={String(ordersCount)} hint="Base sincronizada do Winthor via n8n." />
+        <StatCard label="Pedidos faturados" value={String(ordersCount)} hint="Base sincronizada do Winthor via n8n." />
         <StatCard label="Cargas em operação" value={String(openLoadsCount)} hint="Cargas abertas ou em trânsito na rua." />
         <StatCard label="Motoristas ativos" value={String(activeDriversCount)} hint="Motoristas aptos para execução e retorno." />
-        <StatCard label="Pedidos em rota" value={String(inTransitCount)} hint="Entregas acompanhadas em tempo real pelo portal." />
+        <StatCard label="Saíram para entrega" value={String(inTransitCount)} hint="Pedidos atualmente em execução na rua." />
         <StatCard
           label="Valor em trânsito"
           value={currency(pendingOrdersValue._sum.totalValue?.toString())}

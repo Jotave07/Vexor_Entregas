@@ -106,7 +106,7 @@ export default async function LoadsPage() {
               <div className="rounded-3xl bg-slate-50 p-4">
                 <p className="text-sm text-slate-500">Entregues</p>
                 <p className="mt-2 font-semibold text-slate-950">
-                  {load.orders.filter(({ order }) => order.currentStatus === "DELIVERED").length}
+                  {load.orders.filter(({ order }) => order.currentStatus === "ENTREGUE").length}
                 </p>
               </div>
             </div>

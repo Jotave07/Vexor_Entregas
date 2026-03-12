@@ -10,7 +10,15 @@ import { formatDate } from "@/lib/utils";
 
 export const dynamic = "force-dynamic";
 
-const allowedStatuses: OrderStatus[] = ["ON_ROUTE", "DELIVERED", "FAILED", "RETURNED"];
+const allowedStatuses: OrderStatus[] = [
+  "SAIU_PARA_ENTREGA",
+  "ENTREGUE",
+  "ENTREGA_PARCIAL",
+  "CLIENTE_AUSENTE",
+  "RECUSADO",
+  "DEVOLUCAO",
+  "OCORRENCIA"
+];
 
 export default async function DriverOrderPage({ params }: { params: Promise<{ id: string }> }) {
   const session = await requireAuth();
@@ -58,11 +66,12 @@ export default async function DriverOrderPage({ params }: { params: Promise<{ id
           <p className="mt-2 text-sm text-slate-500">{order.address ?? "Endereço não informado"}</p>
           <p className="mt-2 text-sm text-slate-500">Previsão: {formatDate(order.plannedDeliveryAt)}</p>
           <p className="mt-2 text-sm text-slate-500">Carga: {order.loads[0]?.load.code ?? "Não identificada"}</p>
+          <p className="mt-2 text-sm text-slate-500">Contato: {order.customerWhatsapp ?? order.customerPhone ?? "Não informado"}</p>
 
           <form action={`/api/driver/orders/${order.id}/status`} method="post" encType="multipart/form-data" className="mt-6 space-y-4">
             <div>
               <label className="mb-2 block text-sm font-medium text-slate-700">Novo status</label>
-              <Select name="status" defaultValue="ON_ROUTE">
+              <Select name="status" defaultValue="SAIU_PARA_ENTREGA">
                 {allowedStatuses.map((status) => (
                   <option key={status} value={status}>
                     {orderStatusLabels[status]}
@@ -97,6 +106,17 @@ export default async function DriverOrderPage({ params }: { params: Promise<{ id
                 accept="image/*,.pdf"
               />
               <p className="mt-2 text-xs text-slate-500">Envie foto ou PDF. O arquivo será registrado no portal para retorno operacional.</p>
+            </div>
+
+            <div className="grid gap-4 md:grid-cols-2">
+              <div>
+                <label className="mb-2 block text-sm font-medium text-slate-700">Nome do recebedor</label>
+                <input className="block h-11 w-full rounded-lg border border-slate-300 px-4 text-sm" type="text" name="receiverName" />
+              </div>
+              <div>
+                <label className="mb-2 block text-sm font-medium text-slate-700">Documento do recebedor</label>
+                <input className="block h-11 w-full rounded-lg border border-slate-300 px-4 text-sm" type="text" name="receiverDocument" />
+              </div>
             </div>
 
             <Button type="submit" className="w-full">

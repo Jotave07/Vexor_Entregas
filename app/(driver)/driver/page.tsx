@@ -58,7 +58,7 @@ export default async function DriverPortalPage() {
                 scheduledDate={load.scheduledDate}
                 status={load.status}
                 orderCount={load.orders.length}
-                deliveredCount={load.orders.filter(({ order }) => order.currentStatus === "DELIVERED").length}
+                deliveredCount={load.orders.filter(({ order }) => order.currentStatus === "ENTREGUE").length}
               />
             ))}
           </div>

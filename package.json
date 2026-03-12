@@ -8,6 +8,7 @@
     "start": "next start",
     "lint": "next lint",
     "prisma:generate": "prisma generate",
+    "prisma:order-status-migrate": "prisma db execute --file prisma/order-status-migration.sql --schema prisma/schema.prisma",
     "prisma:migrate": "prisma migrate dev",
     "prisma:seed": "tsx prisma/seed.ts"
   },

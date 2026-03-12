@@ -7,7 +7,15 @@ import { requireAuth } from "@/lib/auth";
 import { createIntegrationEvent } from "@/lib/integrations";
 import { prisma } from "@/lib/prisma";
 
-const driverAllowedStatuses: OrderStatus[] = ["ON_ROUTE", "DELIVERED", "FAILED", "RETURNED"];
+const driverAllowedStatuses: OrderStatus[] = [
+  "SAIU_PARA_ENTREGA",
+  "ENTREGUE",
+  "ENTREGA_PARCIAL",
+  "CLIENTE_AUSENTE",
+  "RECUSADO",
+  "DEVOLUCAO",
+  "OCORRENCIA"
+];
 
 export async function POST(request: Request, { params }: { params: Promise<{ id: string }> }) {
   const session = await requireAuth([UserRole.DRIVER]);
@@ -21,6 +29,8 @@ export async function POST(request: Request, { params }: { params: Promise<{ id:
   const status = formData.get("status")?.toString() as OrderStatus | undefined;
   const notes = formData.get("notes")?.toString();
   const occurrenceType = formData.get("occurrenceType")?.toString() as OccurrenceType | undefined;
+  const receiverName = formData.get("receiverName")?.toString();
+  const receiverDocument = formData.get("receiverDocument")?.toString();
   const proof = formData.get("proof");
 
   if (!status || !driverAllowedStatuses.includes(status)) {
@@ -121,7 +131,11 @@ export async function POST(request: Request, { params }: { params: Promise<{ id:
         type: proof.type === "application/pdf" ? ProofType.RECEIPT : ProofType.PHOTO,
         fileName: proof.name,
         fileUrl: `/uploads/proofs/${safeFileName}`,
-        mimeType: proof.type
+        mimeType: proof.type,
+        receiverName,
+        receiverDocument,
+        deliveredAt: new Date(),
+        notes
       }
     });
 
@@ -136,7 +150,10 @@ export async function POST(request: Request, { params }: { params: Promise<{ id:
         erpOrderNumber: order.erpOrderNumber,
         fileName: createdProof.fileName,
         fileUrl: createdProof.fileUrl,
-        type: createdProof.type
+        type: createdProof.type,
+        receiverName: createdProof.receiverName,
+        receiverDocument: createdProof.receiverDocument,
+        deliveredAt: createdProof.deliveredAt
       }
     });
   }
