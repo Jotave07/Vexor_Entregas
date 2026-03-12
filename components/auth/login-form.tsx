@@ -2,13 +2,11 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { useNavigationProgress } from "@/components/providers/navigation-progress";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
 export function LoginForm() {
   const router = useRouter();
-  const { startNavigation } = useNavigationProgress();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -35,7 +33,6 @@ export function LoginForm() {
       return;
     }
 
-    startNavigation();
     router.push("/dashboard");
     router.refresh();
   }

@@ -1,7 +1,7 @@
+import Link from "next/link";
 import { redirect } from "next/navigation";
 import { Package, Truck, Users, LayoutDashboard, Workflow, LogOut } from "lucide-react";
 import { clearSession, type SessionUser } from "@/lib/auth";
-import { AppLink } from "@/components/providers/navigation-progress";
 import { roleLabels } from "@/lib/status";
 import { Button } from "@/components/ui/button";
 
@@ -25,14 +25,14 @@ export function NavSidebar({ session }: { session: SessionUser }) {
 
       <nav className="flex flex-1 flex-col gap-2">
         {links.map(({ href, label, icon: Icon }) => (
-          <AppLink
+          <Link
             key={href}
             href={href}
             className="flex items-center gap-3 rounded-2xl px-4 py-3 text-sm text-brand-100/85 transition hover:bg-white/10 hover:text-white"
           >
             <Icon className="h-4 w-4" />
             {label}
-          </AppLink>
+          </Link>
         ))}
       </nav>
 

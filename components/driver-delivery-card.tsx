@@ -1,6 +1,6 @@
+import Link from "next/link";
 import { orderStatusLabels } from "@/lib/status";
 import { formatDate } from "@/lib/utils";
-import { AppLink } from "@/components/providers/navigation-progress";
 import { StatusBadge } from "@/components/status-badge";
 
 type DriverDeliveryCardProps = {
@@ -43,12 +43,12 @@ export function DriverDeliveryCard({
       <p className="mt-2 text-sm text-slate-500">Previsão: {formatDate(plannedDeliveryAt)}</p>
 
       <div className="mt-4 flex gap-3">
-        <AppLink
+        <Link
           href={`/driver/orders/${orderId}`}
           className="inline-flex h-11 items-center justify-center rounded-2xl bg-brand-600 px-4 text-sm font-semibold text-white"
         >
           Atualizar status
-        </AppLink>
+        </Link>
       </div>
     </div>
   );
