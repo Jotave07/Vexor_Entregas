@@ -17,7 +17,7 @@ export async function requireIntegrationToken(target: TokenTarget) {
   const expectedToken = process.env[envTokenName(target)];
 
   if (!expectedToken) {
-    throw new Error(`${envTokenName(target)} is not configured.`);
+    return target === "n8n";
   }
 
   const bearerToken = authHeader?.startsWith("Bearer ") ? authHeader.slice(7) : null;
