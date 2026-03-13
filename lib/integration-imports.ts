@@ -178,6 +178,12 @@ function normalizeLoadsPayload(body: unknown) {
     return normalizeLoadsPayload((body as { data: unknown[] }).data);
   }
 
+  const singleFlatRow = flatLoadRowSchema.safeParse(body);
+
+  if (singleFlatRow.success) {
+    return normalizeLoadsPayload([singleFlatRow.data]);
+  }
+
   return importedLoadsPayloadSchema.safeParse(body);
 }
 
@@ -396,10 +402,17 @@ export async function importLoads(body: unknown, provider: IntegrationProvider) 
             })
           : null;
 
-        const existingLoad = await tx.load.findUnique({
+        const existingLoadByIntegrationRef = await tx.load.findUnique({
           where: { integrationRef: loadPayload.integrationRef },
           select: { id: true }
         });
+
+        const existingLoadByCode = existingLoadByIntegrationRef
+          ? null
+          : await tx.load.findUnique({
+              where: { code: loadPayload.code },
+              select: { id: true, integrationRef: true }
+            });
 
         const orders = [];
 
@@ -508,7 +521,7 @@ export async function importLoads(body: unknown, provider: IntegrationProvider) 
           dispatcherName: loadPayload.dispatcherName
         };
 
-        let loadId = existingLoad?.id;
+        let loadId = existingLoadByIntegrationRef?.id ?? existingLoadByCode?.id;
 
         if (!loadId) {
           const createdLoad = await tx.load.create({
@@ -523,21 +536,51 @@ export async function importLoads(body: unknown, provider: IntegrationProvider) 
         } else {
           await tx.load.update({
             where: { id: loadId },
-            data: loadData
-          });
-
-          await tx.loadOrder.deleteMany({
-            where: { loadId }
+            data: {
+              integrationRef: loadPayload.integrationRef,
+              ...loadData
+            }
           });
         }
 
-        await tx.loadOrder.createMany({
-          data: orders.map((order, index) => ({
-            loadId,
-            orderId: order.id,
-            sequence: index + 1
-          }))
+        const currentLoadOrders = await tx.loadOrder.findMany({
+          where: { loadId },
+          select: { orderId: true, sequence: true }
         });
+
+        let nextSequence =
+          currentLoadOrders.reduce((highest, item) => Math.max(highest, item.sequence), 0) + 1;
+
+        for (const order of orders) {
+          const existingLoadOrder = await tx.loadOrder.findUnique({
+            where: { orderId: order.id },
+            select: { loadId: true, sequence: true }
+          });
+
+          if (!existingLoadOrder) {
+            await tx.loadOrder.create({
+              data: {
+                loadId,
+                orderId: order.id,
+                sequence: nextSequence++
+              }
+            });
+
+            continue;
+          }
+
+          if (existingLoadOrder.loadId === loadId) {
+            continue;
+          }
+
+          await tx.loadOrder.update({
+            where: { orderId: order.id },
+            data: {
+              loadId,
+              sequence: nextSequence++
+            }
+          });
+        }
 
         const syncedLoad = await tx.load.findUniqueOrThrow({
           where: { id: loadId }
